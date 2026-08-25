@@ -20,4 +20,9 @@ public class RoleRepository(AppDbContext context) : IRoleRepository
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Role?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+       return await context.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == id,cancellationToken);
+    }
 }
