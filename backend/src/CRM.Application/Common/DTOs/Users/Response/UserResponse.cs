@@ -1,7 +1,8 @@
-namespace CRM.Application.Common.DTOs.Users;
+namespace CRM.Application.Common.DTOs.Users.Response;
 
-public record UserDto(
-    Guid Id,
+public record UserResponse
+(
+     Guid Id,
     string FirstName,
     string LastName,
     string PhoneNumber,

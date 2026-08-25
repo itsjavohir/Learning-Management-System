@@ -1,3 +1,5 @@
+using CRM.Application.Common.DTOs.Users.Request;
+using CRM.Application.Features.Users.Commands.CreateUser;
 using CRM.Application.Features.Users.Queries.GetAllUsers;
 using CRM.Application.Features.Users.Queries.GetUserById;
 using MediatR;
@@ -7,8 +9,21 @@ namespace CRM.WebApi.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UsersController(IMediator mediator) : ControllerBase
+public class UsersController(IMediator mediator) : BaseController
 {
+    [HttpPost]
+
+    public async Task<IActionResult> Create ([FromBody]CreateUserRequest request,CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new CreateUserCommand(request),cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return HandleError(result);
+
+        }
+
+        return Ok(result);
+    }
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
