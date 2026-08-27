@@ -1,5 +1,9 @@
 namespace CRM.Application.Common.DTOs.Users.Request;
 
-public class UpdateUserRequest
-{
-}
+public record UpdateUserRequest
+(
+    string FirstName,
+    string LastName,
+    string PhoneNumber,
+    string Email
+);

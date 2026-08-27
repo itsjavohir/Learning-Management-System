@@ -28,11 +28,11 @@ public class CreateUserCommandHandler(IUnitOfWork unitOfWork,IPasswordHasher pas
             return Result<CreateUserResponse>.Fail("User already exists", ErrorType.Conflict);
         }
           
- var existingUserEmail = await unitOfWork.User.GetByEmailAsync(request.Email, cancellationToken);
-if (existingUserEmail != null)
-{
-    return Result<CreateUserResponse>.Fail("User with this email already exists", ErrorType.Conflict);
-}
+           var existingUserEmail = await unitOfWork.User.GetByEmailAsync(request.Email, cancellationToken);
+     if (existingUserEmail != null)
+    {
+            return Result<CreateUserResponse>.Fail("User with this email already exists", ErrorType.Conflict);
+    }
 
          var role = await unitOfWork.Role.GetByIdAsync(request.RoleId,cancellationToken);
          if(role == null)

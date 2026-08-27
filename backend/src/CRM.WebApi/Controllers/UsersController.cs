@@ -5,6 +5,7 @@ using CRM.Application.Features.Users.Commands.UpdateUser;
 using CRM.Application.Features.Users.Queries.GetAllUsers;
 using CRM.Application.Features.Users.Queries.GetUserById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRM.WebApi.Controllers;
@@ -23,9 +24,11 @@ public class UsersController(IMediator mediator) : BaseController
             return HandleError(result);
         }
 
-        return Ok(result);
+        return Ok(result.Data);
     }
+  [Authorize]
     [HttpGet]
+  
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetAllUsersQuery(), cancellationToken);
