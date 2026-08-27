@@ -1,3 +1,4 @@
+using CRM.Application.Common.Behaviors;
 using CRM.Application.Common.Settings;
 using CRM.Application.Features.Users.Queries.GetAllUsers;
 using CRM.Application.Interfaces.Repositories;
@@ -6,6 +7,9 @@ using CRM.Infrastructure.Persistence.Data;
 using CRM.Infrastructure.Persistence.Seeds;
 using CRM.Infrastructure.Repositories;
 using CRM.Infrastructure.Services;
+using CRM.WebApi.Middlewares;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,10 +32,19 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
+// Регистрация всех Validator'ов из сборки CRM.Application
+builder.Services.AddValidatorsFromAssembly(typeof(GetAllUsersQuery).Assembly);
+
+// Регистрация Pipeline Behavior
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();   
+var app = builder.Build();  
+
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
