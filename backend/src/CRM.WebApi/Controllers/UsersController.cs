@@ -1,5 +1,7 @@
 using CRM.Application.Common.DTOs.Users.Request;
 using CRM.Application.Features.Users.Commands.CreateUser;
+using CRM.Application.Features.Users.Commands.DeleteUser;
+using CRM.Application.Features.Users.Commands.UpdateUser;
 using CRM.Application.Features.Users.Queries.GetAllUsers;
 using CRM.Application.Features.Users.Queries.GetUserById;
 using MediatR;
@@ -19,7 +21,6 @@ public class UsersController(IMediator mediator) : BaseController
         if (!result.IsSuccess)
         {
             return HandleError(result);
-
         }
 
         return Ok(result);
@@ -41,4 +42,32 @@ public class UsersController(IMediator mediator) : BaseController
 
         return Ok(result);
     }
+    [HttpDelete]
+
+    public async Task<IActionResult> Delete (Guid Id,CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteUserCommand(Id),cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return HandleError(result);
+        }
+
+        return NoContent();
+    }
+
+   
+
+   [HttpPut("{id}")]
+public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
+{
+    var result = await mediator.Send(new UpdateUserCommand(id, request), cancellationToken);
+
+    if (!result.IsSuccess)
+    {
+        return HandleError(result);
+    }
+
+    return Ok(result.Data);
+}
 }
