@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using CRM.Application.Common.DTOs.Login.Request;
 using CRM.Application.Features.Auth.Commands.ChangePassword;
+using CRM.Application.Features.Auth.Commands.RefreshToken;
 using CRM.Application.Features.Login;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -37,5 +38,18 @@ public class AuthController(IMediator mediator):BaseController
         return HandleError(result);
 
           return Ok(result.Data);
+    }
+    [HttpPost("refresh-token")]
+
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request,CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new RefreshTokenCommand(request),cancellationToken);
+
+        if (!result.IsSuccess)
+        {
+            return HandleError(result);
+        }
+
+        return Ok(result.Data);
     }
 }

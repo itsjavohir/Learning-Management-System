@@ -26,7 +26,7 @@ public class UsersController(IMediator mediator) : BaseController
 
         return Ok(result.Data);
     }
-  [Authorize]
+  
     [HttpGet]
   
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)

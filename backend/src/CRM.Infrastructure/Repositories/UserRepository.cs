@@ -48,6 +48,13 @@ public class UserRepository(AppDbContext dbcontext) : IUserRepository
             .FirstOrDefaultAsync(u => u.PhoneNumber == phone, cancellationToken);
     }
 
+    public async Task<User?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+{
+    return await dbcontext.Users
+        .Include(u => u.Role)
+        .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken, cancellationToken);
+}
+
     public void Update(User user)
     {
         dbcontext.Users.Update(user);
