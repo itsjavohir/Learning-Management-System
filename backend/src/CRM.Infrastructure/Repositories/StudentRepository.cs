@@ -27,5 +27,10 @@ public class StudentRepository(AppDbContext dbcontext) : IStudentRepository
         dbcontext.Students.Update(student);
         student.MarkAsUpdated();
     }
-
+     public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+{
+    return await dbcontext.Students
+        .Include(s => s.User)
+        .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+}
 }
