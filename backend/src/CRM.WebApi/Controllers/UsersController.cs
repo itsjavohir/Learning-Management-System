@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CRM.Application.Common.DTOs.Users.Request;
 using CRM.Application.Features.Users.Commands.CreateUser;
 using CRM.Application.Features.Users.Commands.DeleteUser;
@@ -70,6 +71,19 @@ public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserRequest re
     {
         return HandleError(result);
     }
+
+    return Ok(result.Data);
+}
+[Authorize]
+[HttpPut("me")]
+public async Task<IActionResult> UpdateMe([FromBody] UpdateUserRequest request, CancellationToken cancellationToken)
+{
+    var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+    var result = await mediator.Send(new UpdateUserCommand(userId, request), cancellationToken);
+
+    if (!result.IsSuccess)
+        return HandleError(result);
 
     return Ok(result.Data);
 }
