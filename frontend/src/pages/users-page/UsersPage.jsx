@@ -1,41 +1,42 @@
-import { useEffect, useState } from 'react';
-import { userApi } from '../../entities/user/api/userApi';
+import { useState } from 'react';
+import { useUsers, useCreateUser, useDeleteUser } from '../../entities/user';
 import './UsersPage.css';
 
+const EMPTY_FORM = {
+  firstName: '',
+  lastName: '',
+  phoneNumber: '',
+  email: '',
+  roleId: '',
+};
+
 function UsersPage() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [form, setForm] = useState({
-    firstName: '', lastName: '', phoneNumber: '', email: '', roleId: '',
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
 
-  const loadUsers = () => {
-    setLoading(true);
-    userApi.getAll().then(setUsers).catch((err) => setError(err.message)).finally(() => setLoading(false));
-  };
+  const { data: users = [], isLoading, isError, error } = useUsers();
+  const createUser = useCreateUser();
+  const deleteUser = useDeleteUser();
 
-  useEffect(() => { loadUsers(); }, []);
-
-  const handleCreate = async (e) => {
+  const handleCreate = (e) => {
     e.preventDefault();
-    try {
-      await userApi.create(form);
-      setForm({ firstName: '', lastName: '', phoneNumber: '', email: '', roleId: '' });
-      loadUsers();
-    } catch (err) {
-      alert(err.response?.data?.message || 'Error creating user');
-    }
+    createUser.mutate(form, {
+      onSuccess: () => setForm(EMPTY_FORM),
+    });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     if (!confirm('Delete this user?')) return;
-    await userApi.delete(id);
-    loadUsers();
+    deleteUser.mutate(id);
   };
 
-  if (loading) return <p style={{ padding: 40 }}>Loading...</p>;
-  if (error) return <p style={{ padding: 40, color: 'var(--color-danger)' }}>Error: {error}</p>;
+  if (isLoading) return <p style={{ padding: 40 }}>Loading...</p>;
+  if (isError) {
+    return (
+        <p style={{ padding: 40, color: 'var(--color-danger)' }}>
+          Error: {error?.response?.data?.message || error?.message}
+        </p>
+    );
+  }
 
   return (
       <div className="users-page">
@@ -47,17 +48,40 @@ function UsersPage() {
         <div className="create-card">
           <h3>Add new user</h3>
           <form onSubmit={handleCreate} className="create-form">
-            <input placeholder="First name" value={form.firstName}
-                   onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
-            <input placeholder="Last name" value={form.lastName}
-                   onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
-            <input placeholder="Phone" value={form.phoneNumber}
-                   onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })} />
-            <input placeholder="Email" value={form.email}
-                   onChange={(e) => setForm({ ...form, email: e.target.value })} />
-            <input placeholder="Role ID" value={form.roleId}
-                   onChange={(e) => setForm({ ...form, roleId: e.target.value })} />
-            <button type="submit">Create</button>
+            {createUser.isError && (
+                <div className="create-form-error">
+                  {createUser.error?.response?.data?.message || 'Error creating user'}
+                </div>
+            )}
+
+            <input
+                placeholder="First name"
+                value={form.firstName}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+            />
+            <input
+                placeholder="Last name"
+                value={form.lastName}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+            />
+            <input
+                placeholder="Phone"
+                value={form.phoneNumber}
+                onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+            />
+            <input
+                placeholder="Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+            <input
+                placeholder="Role ID"
+                value={form.roleId}
+                onChange={(e) => setForm({ ...form, roleId: e.target.value })}
+            />
+            <button type="submit" disabled={createUser.isPending}>
+              {createUser.isPending ? 'Adding...' : 'Create'}
+            </button>
           </form>
         </div>
 
@@ -65,7 +89,12 @@ function UsersPage() {
           <table className="users-table">
             <thead>
             <tr>
-              <th>Name</th><th>Phone</th><th>Email</th><th>Role</th><th>Status</th><th></th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>
@@ -79,7 +108,15 @@ function UsersPage() {
                     <span className={`status-dot ${!user.isActive ? 'inactive' : ''}`} />
                     {user.isActive ? 'Active' : 'Inactive'}
                   </td>
-                  <td><button className="delete-btn" onClick={() => handleDelete(user.id)}>Delete</button></td>
+                  <td>
+                    <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(user.id)}
+                        disabled={deleteUser.isPending}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
             ))}
             </tbody>

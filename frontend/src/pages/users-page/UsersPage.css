@@ -1,138 +1,442 @@
-﻿.users-page {
-    max-width: 1040px;
+/* =========================
+   USERS PAGE
+========================= */
+
+.users-page {
+    width: 100%;
+    max-width: 1180px;
     margin: 0 auto;
-    padding: 40px 24px;
+    padding: 42px 32px 60px;
+    color: var(--color-text);
 }
+
+
+/* =========================
+   HEADER
+========================= */
 
 .users-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 32px;
-}
-
-.users-header h1 {
-    font-size: 26px;
-}
-
-.users-count {
-    color: var(--color-text-muted);
-    font-size: 14px;
-}
-
-.create-card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 20px;
+    align-items: center;
     margin-bottom: 28px;
 }
 
-.create-card h3 {
-    font-size: 14px;
-    color: var(--color-text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    margin-bottom: 14px;
+.users-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
 }
+
+.users-count {
+    padding: 7px 13px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/* =========================
+   CREATE USER CARD
+========================= */
+
+.create-card {
+    position: relative;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-md);
+}
+
+.create-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 24px;
+    right: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            var(--color-accent),
+            transparent
+    );
+    opacity: 0.55;
+}
+
+.create-card h3 {
+    margin: 0 0 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-accent-hover);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+/* =========================
+   CREATE FORM
+========================= */
 
 .create-form {
     display: grid;
-    grid-template-columns: repeat(5, 1fr) auto;
+    grid-template-columns:
+        minmax(120px, 1fr)
+        minmax(120px, 1fr)
+        minmax(130px, 1fr)
+        minmax(170px, 1.3fr)
+        100px
+        auto;
     gap: 10px;
+    align-items: center;
 }
 
 .create-form input {
-    padding: 9px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 7px;
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 11px 13px;
+
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+
+    color: var(--color-text);
     font-size: 13px;
-    background: var(--color-bg);
+
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.create-form input::placeholder {
+    color: var(--color-text-faint);
+}
+
+.create-form input:hover {
+    border-color: #c3b6ea;
 }
 
 .create-form input:focus {
     outline: none;
+    background: #ffffff;
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
+
+/* =========================
+   CREATE BUTTON
+========================= */
+
 .create-form button {
-    padding: 9px 18px;
-    background: var(--color-accent);
-    color: white;
+    height: 40px;
+    padding: 0 20px;
+
     border: none;
-    border-radius: 7px;
+    border-radius: 8px;
+
+    background: var(--color-accent);
+    color: #ffffff;
+
     font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            transform 0.15s ease,
+            box-shadow 0.2s ease,
+            opacity 0.2s ease;
 }
 
 .create-form button:hover {
     background: var(--color-accent-hover);
+    box-shadow: 0 6px 18px rgba(124, 58, 237, 0.22);
 }
 
+.create-form button:active {
+    transform: translateY(1px);
+}
+
+.create-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   FORM ERROR
+========================= */
+
+.create-form-error {
+    grid-column: 1 / -1;
+
+    margin: -2px 0 4px;
+    padding: 9px 12px;
+
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    border-radius: 8px;
+
+    font-size: 12px;
+    color: var(--color-danger);
+
+    background: var(--color-danger-soft);
+}
+
+
+/* =========================
+   TABLE CONTAINER
+========================= */
+
 .users-table-wrap {
+    overflow: hidden;
+
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    overflow: hidden;
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-md);
 }
+
+
+/* =========================
+   TABLE
+========================= */
 
 .users-table {
     width: 100%;
     border-collapse: collapse;
+
     font-size: 14px;
 }
 
+
+/* =========================
+   TABLE HEADER
+========================= */
+
 .users-table th {
+    height: 48px;
+    padding: 0 20px;
+
     text-align: left;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--color-text-muted);
-    padding: 12px 20px;
+
+    background: var(--color-surface-alt);
     border-bottom: 1px solid var(--color-border);
+
+    color: var(--color-text-muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
+
+
+/* =========================
+   TABLE CELLS
+========================= */
 
 .users-table td {
-    padding: 14px 20px;
+    padding: 17px 20px;
+
     border-bottom: 1px solid var(--color-border);
+
+    color: var(--color-text);
+
+    transition: background 0.15s ease;
 }
 
-.users-table tr:last-child td {
+.users-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.users-table tbody tr:hover {
+    background: var(--color-accent-soft);
+}
+
+.users-table tbody tr:last-child td {
     border-bottom: none;
 }
 
-.role-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
+
+/* =========================
+   NAME
+========================= */
+
+.users-table td:first-child {
+    color: var(--color-text);
     font-weight: 600;
-    background: #FEF3E2;
-    color: var(--color-accent-hover);
 }
+
+
+/* =========================
+   PHONE
+========================= */
+
+.users-table td:nth-child(2) {
+    color: var(--color-text-muted);
+}
+
+
+/* =========================
+   EMAIL
+========================= */
+
+.users-table td:nth-child(3) {
+    color: var(--color-text-muted);
+}
+
+
+/* =========================
+   ROLE BADGE
+========================= */
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+
+    min-width: 65px;
+    justify-content: center;
+
+    padding: 5px 11px;
+
+    border: 1px solid var(--color-border-strong);
+    border-radius: 999px;
+
+    background: var(--color-accent-soft);
+    color: var(--color-accent-hover);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   STATUS
+========================= */
 
 .status-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+
+    width: 7px;
+    height: 7px;
+
+    margin-right: 8px;
+
     border-radius: 50%;
-    margin-right: 6px;
-    background: #16A34A;
+
+    background: var(--color-success);
 }
 
 .status-dot.inactive {
-    background: #9CA3AF;
+    background: var(--color-text-faint);
 }
 
+
+/* =========================
+   DELETE
+========================= */
+
 .delete-btn {
-    background: none;
-    border: none;
-    color: var(--color-text-muted);
-    font-size: 13px;
+    padding: 6px 10px;
+
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+
+    color: var(--color-text-faint);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+            color 0.2s ease,
+            background 0.2s ease,
+            border-color 0.2s ease,
+            opacity 0.2s ease;
 }
 
 .delete-btn:hover {
     color: var(--color-danger);
+    background: var(--color-danger-soft);
+    border-color: rgba(220, 38, 38, 0.15);
+}
+
+.delete-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   LOADING / ERROR
+========================= */
+
+.users-page > p {
+    color: var(--color-text-muted);
+}
+
+.users-page > p[style*="danger"] {
+    color: var(--color-danger) !important;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+    .users-page {
+        padding: 32px 20px 50px;
+    }
+
+    .create-form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .create-form button {
+        width: 100%;
+    }
+
+    .users-table-wrap {
+        overflow-x: auto;
+    }
+
+    .users-table {
+        min-width: 850px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .users-page {
+        padding: 24px 14px 40px;
+    }
+
+    .users-header h1 {
+        font-size: 24px;
+    }
+
+    .create-card {
+        padding: 18px;
+    }
+
+    .create-form {
+        grid-template-columns: 1fr;
+    }
 }

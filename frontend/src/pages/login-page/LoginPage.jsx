@@ -1,7 +1,6 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi } from '../../entities/auth/api/authApi';
-import { tokenStorage } from '../../shared/lib/tokenStorage';
+import { useLogin } from '../../features/auth';
 import './LoginPage.css';
 
 function UserIcon() {
@@ -39,30 +38,21 @@ function LockIcon() {
 function LoginPage() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
+    const { mutate, isPending, error } = useLogin();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setError(null);
 
-        try {
-            const data = await authApi.login(phoneNumber, password);
-
-            tokenStorage.setTokens(
-                data.accessToken,
-                data.refreshToken
-            );
-
-            navigate(
-                data.mustChangePassword
-                    ? '/change-password'
-                    : '/'
-            );
-        } catch {
-            setError('Invalid phone number or password');
-        }
+        mutate(
+            { phoneNumber, password },
+            {
+                onSuccess: (data) => {
+                    navigate(data.mustChangePassword ? '/change-password' : '/');
+                },
+            }
+        );
     };
 
     return (
@@ -124,7 +114,7 @@ function LoginPage() {
 
                         {error && (
                             <div className="login-error">
-                                {error}
+                                Invalid phone number or password
                             </div>
                         )}
 
@@ -199,8 +189,9 @@ function LoginPage() {
                         <button
                             type="submit"
                             className="login-submit"
+                            disabled={isPending}
                         >
-                            Sign in
+                            {isPending ? 'Signing in...' : 'Sign in'}
                         </button>
 
 

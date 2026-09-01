@@ -1,8 +1,10 @@
 ﻿import { Navigate } from 'react-router-dom';
-import { tokenStorage } from '../../../shared/lib/tokenStorage';
+import { useAuthStore } from '../../../entities/auth';
 
 function ProtectedRoute({ children }) {
-    if (!tokenStorage.isAuthenticated()) {
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+    if (!isAuthenticated) {
         return <Navigate to="/login" replace />;
     }
     return children;
