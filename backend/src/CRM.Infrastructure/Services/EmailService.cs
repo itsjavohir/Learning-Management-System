@@ -44,4 +44,17 @@ public class EmailService(IOptions<EmailSettings> settings) : IEmailService
         message.To.Add(toEmail);
         await client.SendMailAsync(message, cancellationToken);
     }
+
+    public async Task SendPasswordResetCodeAsync(string toEmail, string fullName, string code, CancellationToken cancellationToken)
+{
+    var subject = "Password reset code";
+    var body = $"""
+                <p>Hello, <strong>{fullName}</strong>.</p>
+                <p>Your password reset code is:</p>
+                <h2>{code}</h2>
+                <p>This code expires in 15 minutes.</p>
+                """;
+
+    await SendAsync(toEmail, subject, body, cancellationToken);
+}
 }
