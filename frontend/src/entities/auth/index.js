@@ -1,2 +1,2 @@
-export { authApi } from './api/authApi';
+export { authApi, AUTH_CHANNEL } from './api/authApi';
 export { useAuthStore } from './model/store';

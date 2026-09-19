@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useUsers, useCreateUser, useDeleteUser } from '../../entities/user';
+import { useAuthStore } from '../../entities/auth';
 import './UsersPage.css';
 
 const EMPTY_FORM = {
@@ -13,9 +15,17 @@ const EMPTY_FORM = {
 function UsersPage() {
   const [form, setForm] = useState(EMPTY_FORM);
 
+  const navigate = useNavigate();
+  const clearSession = useAuthStore((state) => state.clearSession);
+
   const { data: users = [], isLoading, isError, error } = useUsers();
   const createUser = useCreateUser();
   const deleteUser = useDeleteUser();
+
+  const handleLogout = () => {
+    clearSession();
+    navigate('/login');
+  };
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -42,7 +52,12 @@ function UsersPage() {
       <div className="users-page">
         <div className="users-header">
           <h1>Users</h1>
-          <span className="users-count">{users.length} total</span>
+          <div className="users-header-actions">
+            <span className="users-count">{users.length} total</span>
+            <button type="button" className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </div>
 
         <div className="create-card">

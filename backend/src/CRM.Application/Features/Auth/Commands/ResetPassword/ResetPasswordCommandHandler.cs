@@ -11,22 +11,37 @@ public class ResetPasswordCommandHandler(
     IUnitOfWork unitOfWork,
     ITokenGenerator tokenGenerator,
     IPasswordHasher passwordHasher
-):IRequestHandler<ResetPasswordCommand,Result<LoginResponse>>
+) : IRequestHandler<ResetPasswordCommand, Result<LoginResponse>>
 {
-    public async Task<Result<LoginResponse>> Handle (ResetPasswordCommand command,CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> Handle(ResetPasswordCommand command, CancellationToken cancellationToken)
     {
         var request = command.Request;
-        var user = await unitOfWork.User.GetByPhoneNumberAsync(request.PhoneNumber,cancellationToken);
-       if (user is null)
-        {
-          return Result<LoginResponse>.Fail("Invalid or expired code", ErrorType.Validation);
-        }
-       var verificationcode = await unitOfWork.VerificationCode.GetActiveCodeAsync(user.Id,VerificationCodeType.PasswordReset,cancellationToken);
-       if(verificationcode is null)
+
+        if (request.Channel == VerificationChannel.Email && string.IsNullOrWhiteSpace(request.Email))
+            return Result<LoginResponse>.Fail("Email is required", ErrorType.Validation);
+
+        if (request.Channel == VerificationChannel.Telegram && string.IsNullOrWhiteSpace(request.PhoneNumber))
+            return Result<LoginResponse>.Fail("Phone number is required", ErrorType.Validation);
+
+   
+        var user = request.Channel == VerificationChannel.Telegram
+            ? await unitOfWork.User.GetByPhoneNumberAsync(request.PhoneNumber!, cancellationToken)
+            : await unitOfWork.User.GetByEmailAsync(request.Email!, cancellationToken);
+
+        if (user is null)
         {
             return Result<LoginResponse>.Fail("Invalid or expired code", ErrorType.Validation);
         }
-        var isCodeValid = passwordHasher.Verify(request.VerifyCode,verificationcode.CodeHash);
+
+        var verificationcode = await unitOfWork.VerificationCode.GetActiveCodeAsync(
+            user.Id, VerificationCodeType.PasswordReset, cancellationToken);
+
+        if (verificationcode is null)
+        {
+            return Result<LoginResponse>.Fail("Invalid or expired code", ErrorType.Validation);
+        }
+
+        var isCodeValid = passwordHasher.Verify(request.VerifyCode, verificationcode.CodeHash);
         if (!isCodeValid)
         {
             verificationcode.Attempts++;
@@ -34,9 +49,10 @@ public class ResetPasswordCommandHandler(
             await unitOfWork.SaveChangesAsync(cancellationToken);
             return Result<LoginResponse>.Fail("Invalid or expired code", ErrorType.Validation);
         }
+
         if (request.NewPassword != request.ConfirmPassword)
-        {     
-             return Result<LoginResponse>.Fail("New password does not match confirm password", ErrorType.Validation);
+        {
+            return Result<LoginResponse>.Fail("New password does not match confirm password", ErrorType.Validation);
         }
 
         var newPasswordHash = passwordHasher.Hash(request.NewPassword);
@@ -53,13 +69,12 @@ public class ResetPasswordCommandHandler(
         unitOfWork.VerificationCode.Update(verificationcode);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-     var response = new LoginResponse(
-    AccessToken: accessToken,
-    RefreshToken: refreshToken,
-    MustChangePassword: false
-);
+        var response = new LoginResponse(
+            AccessToken: accessToken,
+            RefreshToken: refreshToken,
+            MustChangePassword: false
+        );
 
-return Result<LoginResponse>.Ok(response);
-
-}
+        return Result<LoginResponse>.Ok(response);
+    }
 }

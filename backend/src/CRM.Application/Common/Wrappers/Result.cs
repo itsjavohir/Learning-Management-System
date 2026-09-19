@@ -30,4 +30,6 @@ public class Result<T>
     {
         return new Result<T>(error, errorType);
     }
+
+
 }

@@ -37,14 +37,21 @@ function ChangePasswordPage() {
 
     return (
         <main className="login-screen">
-            <div className="login-card" style={{ maxWidth: 460 }}>
-                <section className="login-form-side" style={{ flex: 1 }}>
-                    <div className="login-form-header">
-                        <h1>Change <span>password</span></h1>
-                        <p>You must set a new password before continuing.</p>
-                    </div>
+            <div className="neu-card">
+                <div className="neu-icon-badge">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <rect x="4" y="10" width="16" height="11" rx="3" />
+                        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                        <circle cx="12" cy="15" r="1.6" fill="currentColor" stroke="none" />
+                    </svg>
+                </div>
 
-                    <form onSubmit={handleSubmit}>
+                <div className="login-form-header">
+                    <h1>Change <span>password</span></h1>
+                    <p>You must set a new password before continuing.</p>
+                </div>
+
+                <form onSubmit={handleSubmit}>
                         {error && <div className="login-error">{error}</div>}
 
                         <div className="field">
@@ -86,8 +93,7 @@ function ChangePasswordPage() {
                         <button type="submit" className="login-submit" disabled={isPending}>
                             {isPending ? 'Saving...' : 'Change password'}
                         </button>
-                    </form>
-                </section>
+                </form>
             </div>
         </main>
     );
