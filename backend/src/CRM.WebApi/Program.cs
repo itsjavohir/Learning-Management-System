@@ -35,16 +35,23 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IVerificationChannel, TelegramVerificationChannel>();
+builder.Services.AddScoped<IVerificationChannel, EmailVerificationChannel>();
+builder.Services.AddScoped<IVerificationChannelResolver, VerificationChannelResolver>();
 
-// Регистрация всех Validator'ов из сборки CRM.Application
-builder.Services.AddValidatorsFromAssembly(typeof(GetAllUsersQuery).Assembly);
-
-// Регистрация Pipeline Behavior
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+// Telegram
+builder.Services.Configure<TelegramGatewaySettings>(
+    builder.Configuration.GetSection(TelegramGatewaySettings.SectionName));
+builder.Services.AddHttpClient<ITelegramGatewayService, TelegramGatewayService>();
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
+
+
+// Регистрация всех Validator'ов из сборки CRM.Application
+builder.Services.AddValidatorsFromAssembly(typeof(GetAllUsersQuery).Assembly);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>

@@ -1,7 +1,6 @@
 using CRM.Domain.Common;
+using CRM.Domain.Entities;
 using CRM.Domain.Enums;
-
-namespace CRM.Domain.Entities;
 
 public class VerificationCode : BaseEntity
 {
@@ -9,6 +8,8 @@ public class VerificationCode : BaseEntity
     public User User { get; set; } = null!;
 
     public string CodeHash { get; set; } = null!;
+    public string? ProviderRequestId { get; set; }   // было TelegramRequestId
+    public VerificationChannel Channel { get; set; }  // новое поле
     public VerificationCodeType Type { get; set; }
 
     public DateTime Expiration { get; set; }
