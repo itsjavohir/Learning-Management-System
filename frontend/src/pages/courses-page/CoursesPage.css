@@ -1,0 +1,59 @@
+.create-form--courses {
+    grid-template-columns:
+        minmax(140px, 1.2fr)
+        minmax(160px, 1.4fr)
+        150px
+        auto
+        auto
+        auto;
+}
+
+.active-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.edit-btn {
+    padding: 6px 10px;
+    margin-right: 4px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: var(--color-accent-hover);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background: var(--color-accent-soft);
+}
+
+.cancel-btn {
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+    .create-form--courses {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .create-form--courses {
+        grid-template-columns: 1fr;
+    }
+}

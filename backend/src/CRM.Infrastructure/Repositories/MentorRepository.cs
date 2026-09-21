@@ -19,9 +19,16 @@ public class MentorRepository(AppDbContext dbcontext) : IMentorRepository
         .FirstOrDefaultAsync(m => m.UserId == userId);
     }
 
+    public async Task<List<Mentor>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await dbcontext.Mentors
+        .Include(m => m.User)
+        .ToListAsync(cancellationToken);
+    }
+
     public async Task AddAsync (Mentor mentor,CancellationToken cancellationToken)
     {
-        await dbcontext.Mentors.AddAsync(mentor);
+        await dbcontext.Mentors.AddAsync(mentor,cancellationToken);
     }
 
     public void Update(Mentor mentor)
@@ -29,4 +36,10 @@ public class MentorRepository(AppDbContext dbcontext) : IMentorRepository
        dbcontext.Mentors.Update(mentor);
        mentor.MarkAsUpdated();
     }
+    public async Task<Mentor?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+{
+    return await dbcontext.Mentors
+        .Include(m => m.User)
+        .FirstOrDefaultAsync(m => m.Id == id, cancellationToken);
+}
 }

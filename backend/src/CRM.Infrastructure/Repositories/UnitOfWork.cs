@@ -10,6 +10,8 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IMentorRepository? _mentor;
     private IVerificationCodeRepository? _verificationCode;
     private IRoleRepository? _rolerepository;
+    private ICourseRepository? _course;
+    private IGroupRepository ? _group;
 
     public IUserRepository User =>
         _user ??= new UserRepository(context);
@@ -25,6 +27,10 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
 
         public IRoleRepository Role =>
         _rolerepository ??= new RoleRepository(context);
+
+        public ICourseRepository Course => _course ??= new CourseRepository(context) ;
+
+        public IGroupRepository Group => _group ??= new GroupRepository(context);
 
     
 

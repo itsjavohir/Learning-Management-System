@@ -1,0 +1,61 @@
+.create-form--groups {
+    grid-template-columns:
+        minmax(140px, 1.1fr)
+        minmax(140px, 1fr)
+        minmax(140px, 1fr)
+        150px
+        130px
+        auto
+        auto;
+}
+
+.create-form--groups select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-size: 13px;
+}
+
+.edit-btn {
+    padding: 6px 10px;
+    margin-right: 4px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: var(--color-accent-hover);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background: var(--color-accent-soft);
+}
+
+.cancel-btn {
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+    .create-form--groups {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .create-form--groups {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,28 @@
+# CRM Frontend — правила проекта
+
+## Стек
+- React 19 + Vite, JavaScript (JSX, не TypeScript)
+- Роутинг: react-router-dom v7, BrowserRouter в app/App.jsx
+- Стилизация: обычный CSS (не CSS Modules, не Tailwind), 
+  дизайн-токены в src/index.css (neumorphism, фиолетовый акцент)
+- State: Zustand — сессия (useAuthStore); TanStack Query — серверные 
+  данные; useState — локальные формы
+- HTTP: Axios (shared/api/axiosInstance.js), Bearer-токен из 
+  localStorage, refresh на 401
+
+## Архитектура (Feature-Sliced Design)
+- app/ — инициализация, роутинг, провайдеры
+- pages/ — страницы
+- features/ — действия пользователя (login, create-mentor и т.п.)
+- entities/ — бизнес-сущности (user, mentor, auth) с их CRUD-api и хуками
+- shared/ — переиспользуемые api-клиент, утилиты, UI-кит
+
+## API-слой
+- entities/*/api — CRUD запросы к сущности (get, create, update, delete)
+- features/*/api — запросы, специфичные для конкретного действия
+- Не дублировать: features переиспользует api из entities, если он там уже есть
+
+## Правила работы
+1. Перед кодом — план файлов, дождаться подтверждения
+2. Смотреть на существующие entities/user и features/login-by-phone 
+   как образец стиля

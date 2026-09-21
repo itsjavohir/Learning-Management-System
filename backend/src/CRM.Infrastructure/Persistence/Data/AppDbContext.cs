@@ -10,6 +10,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options ) : DbContext (
     public DbSet<VerificationCode> VerificationCodes => Set<VerificationCode>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Student> Students => Set<Student>();
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<GroupStudent> GroupStudents { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

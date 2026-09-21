@@ -7,6 +7,8 @@ public interface IUnitOfWork
     IMentorRepository Mentor {get;}
     IVerificationCodeRepository VerificationCode {get;}
     IRoleRepository Role { get; }
+    ICourseRepository Course {get;}
+    IGroupRepository Group {get;}
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

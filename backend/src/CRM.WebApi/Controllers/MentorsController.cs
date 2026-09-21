@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CRM.Application.Features.Mentors.Commands;
 using CRM.Application.Features.Mentors.Queries;
+using CRM.Application.Features.Mentors.Queries.GetAllMentorsQuery;
+using CRM.Application.Features.Mentors.Queries.GetMentorById;
 
 namespace CRM.WebApi.Controllers;
 
@@ -40,4 +42,25 @@ public class MentorsController(IMediator mediator) : BaseController
 
         return Ok(result.Data);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllMentors(CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new GetAllMentorsQuery(), cancellationToken);
+
+        if (!result.IsSuccess)
+            return HandleError(result);
+
+        return Ok(result.Data);
+    }
+    [HttpGet("{id:guid}")]
+public async Task<IActionResult> GetMentorById(Guid id, CancellationToken cancellationToken)
+{
+    var result = await mediator.Send(new GetMentorByIdQuery(id), cancellationToken);
+
+    if (!result.IsSuccess)
+        return HandleError(result);
+
+    return Ok(result.Data);
+}
 }
