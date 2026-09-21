@@ -3,7 +3,11 @@ import UsersPage from '../pages/users-page/UsersPage';
 import LoginPage from '../pages/login-page/LoginPage';
 import ForgotPasswordPage from '../pages/forgot-password-page/ForgotPasswordPage';
 import ChangePasswordPage from '../pages/change-password-page/ChangePasswordPage';
+import CoursesPage from '../pages/courses-page/CoursesPage';
+import GroupsPage from '../pages/groups-page/GroupsPage';
+import MentorProfilePage from '../pages/mentor-profile-page/MentorProfilePage';
 import { ProtectedRoute } from '../features/auth';
+import { AdminLayout } from '../widgets/admin-layout';
 
 function App() {
     return (
@@ -20,13 +24,17 @@ function App() {
                     }
                 />
                 <Route
-                    path="/"
                     element={
                         <ProtectedRoute>
-                            <UsersPage />
+                            <AdminLayout />
                         </ProtectedRoute>
                     }
-                />
+                >
+                    <Route path="/" element={<UsersPage />} />
+                    <Route path="/courses" element={<CoursesPage />} />
+                    <Route path="/groups" element={<GroupsPage />} />
+                    <Route path="/mentor-profile" element={<MentorProfilePage />} />
+                </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>

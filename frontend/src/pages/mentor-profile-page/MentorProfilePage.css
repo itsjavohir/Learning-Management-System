@@ -1,0 +1,44 @@
+.mentor-profile-card {
+    max-width: 640px;
+}
+
+.mentor-profile-meta {
+    margin: -8px 0 18px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+
+.create-form--profile {
+    grid-template-columns: 1fr 160px;
+}
+
+.create-form--profile textarea {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    color: var(--color-text);
+    font-size: 13px;
+    font-family: var(--font-body);
+    resize: vertical;
+}
+
+.create-form-success {
+    grid-column: 1 / -1;
+    margin: -2px 0 4px;
+    padding: 9px 12px;
+    border: 1px solid rgba(22, 163, 74, 0.2);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--color-success);
+    background: #ecfdf3;
+}
+
+@media (max-width: 600px) {
+    .create-form--profile {
+        grid-template-columns: 1fr;
+    }
+}

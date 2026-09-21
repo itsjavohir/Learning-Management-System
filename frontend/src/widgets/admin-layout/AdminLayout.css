@@ -1,0 +1,16 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.admin-layout-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 800px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+}
