@@ -1,74 +1,9 @@
 /* =========================================================
-   SCREEN
-   ========================================================= */
-
-.login-screen {
-    width: 100%;
-    min-height: 100vh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 24px;
-
-    position: relative;
-    overflow: hidden;
-
-    background: var(--color-bg);
-}
-
-.login-screen::before,
-.login-screen::after {
-    content: '';
-
-    position: absolute;
-
-    border-radius: 50%;
-    filter: blur(10px);
-
-    z-index: 0;
-    pointer-events: none;
-}
-
-.login-screen::before {
-    width: 620px;
-    height: 620px;
-
-    top: -220px;
-    left: -180px;
-
-    background: radial-gradient(
-            circle at 35% 35%,
-            rgba(124, 58, 237, 0.35),
-            rgba(139, 92, 246, 0.12) 55%,
-            transparent 72%
-    );
-}
-
-.login-screen::after {
-    width: 560px;
-    height: 560px;
-
-    bottom: -220px;
-    right: -160px;
-
-    background: radial-gradient(
-            circle at 60% 60%,
-            rgba(56, 189, 248, 0.28),
-            rgba(167, 139, 250, 0.12) 55%,
-            transparent 72%
-    );
-}
-
-.login-screen > .neu-card {
-    position: relative;
-    z-index: 1;
-}
-
-
-/* =========================================================
    NEUMORPHIC CARD (shared by login / forgot / reset / change password)
+   Screen-level background + decoration now live in widgets/AuthLayout —
+   this file only styles the card and its contents.
+   Colors here come from the seasonal --auth-* tokens (see index.css),
+   so the same markup re-themes itself per season automatically.
    ========================================================= */
 
 .neu-card {
@@ -83,9 +18,11 @@
 
     border-radius: 28px;
 
-    background: var(--color-surface);
+    background: var(--auth-form-bg);
 
     box-shadow: var(--shadow-lg);
+
+    transition: background 0.6s ease;
 }
 
 
@@ -105,10 +42,12 @@
 
     border-radius: 50%;
 
-    background: var(--color-surface);
-    color: var(--color-accent);
+    background: var(--auth-form-bg);
+    color: var(--auth-accent);
 
     box-shadow: var(--shadow-md);
+
+    transition: background 0.6s ease, color 0.6s ease;
 }
 
 
@@ -136,11 +75,11 @@
 
     letter-spacing: -0.6px;
 
-    color: var(--color-text);
+    color: var(--auth-text);
 }
 
 .login-form-header h1 span {
-    color: var(--color-accent);
+    color: var(--auth-accent);
 }
 
 .login-form-header p {
@@ -149,11 +88,11 @@
     font-size: 13px;
     line-height: 1.5;
 
-    color: var(--color-text-muted);
+    color: color-mix(in srgb, var(--auth-text) 65%, transparent);
 }
 
 .login-form-header strong {
-    color: var(--color-text);
+    color: var(--auth-text);
 }
 
 
@@ -182,7 +121,7 @@
     font-size: 12px;
     font-weight: 600;
 
-    color: var(--color-text-muted);
+    color: color-mix(in srgb, var(--auth-text) 60%, transparent);
 
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -211,7 +150,7 @@
 
     transform: translateY(-50%);
 
-    color: var(--color-accent);
+    color: var(--auth-accent);
 
     pointer-events: none;
 }
@@ -230,13 +169,13 @@
     font-family: var(--font-body);
     font-size: 14px;
 
-    color: var(--color-text);
+    color: var(--auth-text);
 
-    background: var(--color-surface);
+    background: var(--auth-form-bg);
 
     box-shadow: var(--shadow-inset-sm);
 
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, background 0.6s ease, color 0.6s ease;
 }
 
 .input-wrapper:has(.input-icon) input {
@@ -244,11 +183,11 @@
 }
 
 .input-wrapper input::placeholder {
-    color: var(--color-text-faint);
+    color: color-mix(in srgb, var(--auth-text) 40%, transparent);
 }
 
 .input-wrapper input:focus {
-    box-shadow: var(--shadow-inset-sm), 0 0 0 3px var(--color-accent-soft);
+    box-shadow: var(--shadow-inset-sm), 0 0 0 3px color-mix(in srgb, var(--auth-accent) 25%, transparent);
 }
 
 
@@ -278,7 +217,7 @@
     letter-spacing: 0.03em;
     text-transform: uppercase;
 
-    color: var(--color-accent);
+    color: var(--auth-accent);
 
     cursor: pointer;
 
@@ -286,7 +225,7 @@
 }
 
 .forgot-password button:hover {
-    color: var(--color-accent-hover);
+    color: color-mix(in srgb, var(--auth-accent) 80%, black);
 }
 
 
@@ -312,15 +251,21 @@
 
     color: #ffffff;
 
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed 60%, #6d28d9);
+    background: linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--auth-accent) 65%, white),
+            var(--auth-accent) 60%,
+            color-mix(in srgb, var(--auth-accent) 75%, black)
+    );
 
-    box-shadow: var(--shadow-md), 0 6px 16px rgba(124, 58, 237, 0.28);
+    box-shadow: var(--shadow-md), 0 6px 16px color-mix(in srgb, var(--auth-accent) 35%, transparent);
 
     transition:
             transform 0.15s ease,
             box-shadow 0.2s ease,
             filter 0.2s ease,
-            opacity 0.2s ease;
+            opacity 0.2s ease,
+            background 0.6s ease;
 }
 
 .login-submit:hover {
@@ -340,6 +285,8 @@
 
 /* =========================================================
    ERROR
+   (intentionally NOT seasonal — an error must stay recognizably
+   red for accessibility/UX regardless of the current theme)
    ========================================================= */
 
 .login-error {
@@ -377,9 +324,9 @@
     text-align: center;
     line-height: 1.5;
 
-    color: var(--color-accent-hover);
+    color: var(--auth-accent);
 
-    background: var(--color-surface);
+    background: var(--auth-form-bg);
 
     box-shadow: var(--shadow-inset-sm);
 }
@@ -400,7 +347,7 @@
 
     border-radius: 14px;
 
-    background: var(--color-surface);
+    background: var(--auth-form-bg);
 
     box-shadow: var(--shadow-inset-sm);
 }
@@ -414,7 +361,7 @@
     border-radius: 10px;
 
     background: transparent;
-    color: var(--color-text-muted);
+    color: color-mix(in srgb, var(--auth-text) 55%, transparent);
 
     font-family: var(--font-body);
     font-size: 12px;
@@ -429,12 +376,12 @@
 }
 
 .channel-switch button:hover {
-    color: var(--color-text);
+    color: var(--auth-text);
 }
 
 .channel-switch button.active {
-    background: var(--color-surface);
-    color: var(--color-accent);
+    background: var(--auth-form-bg);
+    color: var(--auth-accent);
 
     box-shadow: var(--shadow-sm);
 }
@@ -462,7 +409,7 @@
 
     outline: none;
 
-    background: var(--color-surface);
+    background: var(--auth-form-bg);
 
     box-shadow: var(--shadow-inset-sm);
 
@@ -472,13 +419,13 @@
     font-size: 22px;
     font-weight: 700;
 
-    color: var(--color-text);
+    color: var(--auth-text);
 
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, background 0.6s ease, color 0.6s ease;
 }
 
 .otp-box:focus {
-    box-shadow: var(--shadow-inset-sm), 0 0 0 3px var(--color-accent-soft);
+    box-shadow: var(--shadow-inset-sm), 0 0 0 3px color-mix(in srgb, var(--auth-accent) 25%, transparent);
 }
 
 
@@ -487,10 +434,6 @@
    ========================================================= */
 
 @media (max-width: 480px) {
-
-    .login-screen {
-        padding: 14px;
-    }
 
     .neu-card {
         padding: 34px 24px;

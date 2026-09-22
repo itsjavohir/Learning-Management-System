@@ -1,6 +1,8 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../../entities/auth';
+import AuthLayout from '../../widgets/AuthLayout/AuthLayout';
+import './../login-page/LoginPage.css';
 
 function ChangePasswordPage() {
     const [oldPassword, setOldPassword] = useState('');
@@ -36,7 +38,7 @@ function ChangePasswordPage() {
     };
 
     return (
-        <main className="login-screen">
+        <AuthLayout>
             <div className="neu-card">
                 <div className="neu-icon-badge">
                     <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -95,7 +97,7 @@ function ChangePasswordPage() {
                         </button>
                 </form>
             </div>
-        </main>
+        </AuthLayout>
     );
 }
 

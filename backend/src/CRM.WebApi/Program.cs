@@ -38,6 +38,8 @@ builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Emai
 builder.Services.AddScoped<IVerificationChannel, TelegramVerificationChannel>();
 builder.Services.AddScoped<IVerificationChannel, EmailVerificationChannel>();
 builder.Services.AddScoped<IVerificationChannelResolver, VerificationChannelResolver>();
+builder.Services.AddScoped<ISeasonCalculator, SeasonCalculator>();
+builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 // Telegram
 builder.Services.Configure<TelegramGatewaySettings>(

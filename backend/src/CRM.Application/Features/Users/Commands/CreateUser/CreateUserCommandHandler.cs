@@ -40,7 +40,7 @@ public class CreateUserCommandHandler(IUnitOfWork unitOfWork,IPasswordHasher pas
         }
          
         
-         var passwordHash = passwordHasher.Hash(passwordRaw);
+        var passwordHash = passwordHasher.Hash(passwordRaw);
 
         var user = new User
         {

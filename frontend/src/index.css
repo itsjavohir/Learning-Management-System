@@ -41,6 +41,50 @@
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
+
+  /* =========================================================
+     SEASONAL AUTH THEME
+     Consumed by pages/login-page, pages/forgot-password-page,
+     pages/change-password-page and widgets/AuthLayout.
+     Default = Autumn (current season while these tokens were added).
+     ========================================================= */
+  --auth-bg: #f3ece0;
+  --auth-accent: #c2703d;
+  --auth-form-bg: #f8f1e6;
+  --auth-text: #4a2f1d;
+}
+
+
+/* ---------- Winter: cold blues / whites ---------- */
+:root[data-theme="winter"] {
+  --auth-bg: #e8f1fa;
+  --auth-accent: #3b82c4;
+  --auth-form-bg: #f5faff;
+  --auth-text: #1e3049;
+}
+
+/* ---------- Spring: soft greens / pastels ---------- */
+:root[data-theme="spring"] {
+  --auth-bg: #edf7ec;
+  --auth-accent: #4caf7d;
+  --auth-form-bg: #f6fbf4;
+  --auth-text: #26402c;
+}
+
+/* ---------- Summer: bright warm tones ---------- */
+:root[data-theme="summer"] {
+  --auth-bg: #fff3d1;
+  --auth-accent: #f2994a;
+  --auth-form-bg: #fffaf0;
+  --auth-text: #4a3410;
+}
+
+/* ---------- Autumn: orange / brown ---------- */
+:root[data-theme="autumn"] {
+  --auth-bg: #f3ece0;
+  --auth-accent: #c2703d;
+  --auth-form-bg: #f8f1e6;
+  --auth-text: #4a2f1d;
 }
 
 * {

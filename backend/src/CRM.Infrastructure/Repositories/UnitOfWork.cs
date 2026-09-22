@@ -1,5 +1,6 @@
 using CRM.Application.Interfaces.Repositories;
 using CRM.Infrastructure.Persistence.Data;
+using CRM.Infrastructure.Persistence.Repositories;
 
 namespace CRM.Infrastructure.Repositories;
 
@@ -12,6 +13,8 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IRoleRepository? _rolerepository;
     private ICourseRepository? _course;
     private IGroupRepository ? _group;
+
+    private   IThemeSettingsRepository ? _themesettingsrepository;
 
     public IUserRepository User =>
         _user ??= new UserRepository(context);
@@ -31,6 +34,8 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
         public ICourseRepository Course => _course ??= new CourseRepository(context) ;
 
         public IGroupRepository Group => _group ??= new GroupRepository(context);
+
+        public   IThemeSettingsRepository ThemeSettings => _themesettingsrepository ??= new ThemeSettingsRepository(context);
 
     
 

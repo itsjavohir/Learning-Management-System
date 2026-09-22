@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authApi, AUTH_CHANNEL, useAuthStore } from '../../entities/auth';
+import AuthLayout from '../../widgets/AuthLayout/AuthLayout';
 import './../login-page/LoginPage.css';
 
 const CODE_LENGTH = 5;
@@ -152,7 +153,7 @@ function ForgotPasswordPage() {
     };
 
     return (
-        <main className="login-screen">
+        <AuthLayout>
             <div className="neu-card">
 
                 {step === 'request' ? (
@@ -303,7 +304,7 @@ function ForgotPasswordPage() {
                 )}
 
             </div>
-        </main>
+        </AuthLayout>
     );
 }
 

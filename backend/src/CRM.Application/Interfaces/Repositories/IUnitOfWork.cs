@@ -9,6 +9,7 @@ public interface IUnitOfWork
     IRoleRepository Role { get; }
     ICourseRepository Course {get;}
     IGroupRepository Group {get;}
+    IThemeSettingsRepository ThemeSettings { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

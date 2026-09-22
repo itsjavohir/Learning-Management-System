@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from '../../features/auth';
+import AuthLayout from '../../widgets/AuthLayout/AuthLayout';
 import './LoginPage.css';
 
 function LockBadgeIcon() {
@@ -52,7 +53,7 @@ function LoginPage() {
     };
 
     return (
-        <main className="login-screen">
+        <AuthLayout>
             <div className="neu-card">
 
                 <div className="neu-icon-badge">
@@ -114,7 +115,7 @@ function LoginPage() {
                 </form>
 
             </div>
-        </main>
+        </AuthLayout>
     );
 }
 

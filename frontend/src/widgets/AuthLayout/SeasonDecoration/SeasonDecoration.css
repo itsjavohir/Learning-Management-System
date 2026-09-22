@@ -1,0 +1,139 @@
+.season-decoration {
+    position: absolute;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+/* ---------- Winter: snow ---------- */
+
+.snow-particle {
+    position: absolute;
+    top: -10px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+
+    animation-name: snow-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+@keyframes snow-fall {
+    to {
+        transform: translateY(110vh) translateX(14px);
+        opacity: 0.25;
+    }
+}
+
+
+/* ---------- Spring: blossom petals ---------- */
+
+.blossom-particle {
+    position: absolute;
+    top: -10px;
+
+    border-radius: 60% 40% 60% 40%;
+
+    background: #f7b8d0;
+
+    animation-name: blossom-fall;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+}
+
+@keyframes blossom-fall {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateY(110vh) translateX(36px) rotate(320deg);
+        opacity: 0.25;
+    }
+}
+
+
+/* ---------- Summer: sun glow + sparkles ---------- */
+
+.sun-glow {
+    position: absolute;
+    top: -160px;
+    right: -160px;
+
+    width: 360px;
+    height: 360px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(circle, rgba(255, 205, 92, 0.55), rgba(255, 205, 92, 0) 70%);
+
+    animation: sun-pulse 6s ease-in-out infinite;
+}
+
+@keyframes sun-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+}
+
+.sun-sparkle {
+    position: absolute;
+
+    border-radius: 50%;
+
+    background: rgba(255, 221, 140, 0.9);
+
+    animation-name: sun-sparkle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes sun-sparkle {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateY(-14px);
+        opacity: 1;
+    }
+}
+
+
+/* ---------- Autumn: falling leaves ---------- */
+
+.leaf-particle {
+    position: absolute;
+    top: -10px;
+
+    background: var(--auth-accent, #c2703d);
+
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+
+    animation-name: leaf-fall;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+}
+
+@keyframes leaf-fall {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translateY(110vh) translateX(-46px) rotate(280deg);
+        opacity: 0.2;
+    }
+}
