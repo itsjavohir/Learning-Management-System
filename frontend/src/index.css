@@ -87,6 +87,41 @@
   --auth-text: #4a2f1d;
 }
 
+
+/* =========================================================
+   APP DARK / LIGHT MODE (dashboard + all internal pages)
+   Toggled client-side via shared/lib/useColorMode — persisted
+   to localStorage, applied as data-color-mode on <html>.
+   Separate from the seasonal --auth-* theme above, which only
+   covers the public auth pages.
+   ========================================================= */
+:root[data-color-mode="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #14121f;
+  --color-surface: #1b1830;
+  --color-surface-alt: #241f3f;
+
+  --color-text: #f1eef9;
+  --color-text-muted: #a79fc0;
+  --color-text-faint: #766c8f;
+
+  --color-border: #2c2748;
+  --color-border-strong: #3b3260;
+
+  --color-accent: #a78bfa;
+  --color-accent-hover: #c4b5fd;
+  --color-accent-soft: rgba(167, 139, 250, 0.16);
+  --color-accent-soft-strong: rgba(167, 139, 250, 0.26);
+
+  --color-danger: #f87171;
+  --color-danger-soft: rgba(248, 113, 113, 0.14);
+  --color-success: #4ade80;
+
+  --neu-shadow-dark: rgba(0, 0, 0, 0.6);
+  --neu-shadow-light: rgba(255, 255, 255, 0.045);
+}
+
 * {
   box-sizing: border-box;
 }

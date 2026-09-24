@@ -13,6 +13,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options ) : DbContext (
     public DbSet<Course> Courses { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<GroupStudent> GroupStudents { get; set; }
+    public DbSet<Profile> Profiles => Set<Profile>();
+    public DbSet<Lesson> Lessons => Set<Lesson>();
     public DbSet<ThemeSettings> ThemeSettings {get;set;}
 
 

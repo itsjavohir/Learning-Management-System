@@ -42,7 +42,7 @@
 
 
 /* =========================
-   HEADER ACTIONS / LOGOUT
+   HEADER ACTIONS
 ========================= */
 
 .users-header-actions {
@@ -51,36 +51,94 @@
     gap: 12px;
 }
 
-.logout-btn {
-    height: 36px;
-    padding: 0 16px;
 
-    border: 1px solid var(--color-border-strong);
-    border-radius: 999px;
+/* =========================
+   ROW ACTIONS (Edit / Delete buttons in table)
+========================= */
 
-    background: var(--color-surface);
-    color: var(--color-accent-hover);
+.row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
 
-    font-size: 13px;
+.row-actions-delete {
+    color: var(--color-danger) !important;
+}
+
+.row-actions-delete:hover:not(:disabled) {
+    background: var(--color-danger-soft) !important;
+}
+
+.users-empty {
+    padding: 32px 20px !important;
+    text-align: center;
+    color: var(--color-text-faint) !important;
+}
+
+
+/* =========================
+   USER FORM (inside Create/Edit modal)
+========================= */
+
+.user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.user-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.user-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.user-form-field label {
+    font-size: 12px;
     font-weight: 600;
 
-    cursor: pointer;
+    color: var(--color-text-muted);
 
-    transition:
-            background 0.2s ease,
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            transform 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.logout-btn:hover {
-    background: var(--color-accent-soft);
+.user-form-field input {
+    height: 42px;
+
+    padding: 0 13px;
+
+    background: var(--color-surface-alt);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 9px;
+
+    color: var(--color-text);
+    font-size: 13.5px;
+
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-form-field input:hover {
+    border-color: #c3b6ea;
+}
+
+.user-form-field input:focus {
+    outline: none;
+    background: #ffffff;
     border-color: var(--color-accent);
-    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.14);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
 }
 
-.logout-btn:active {
-    transform: translateY(1px);
+@media (max-width: 480px) {
+    .user-form-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 

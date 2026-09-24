@@ -25,7 +25,7 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 
      
         builder.HasOne(g => g.Mentor)
-            .WithMany()
+            .WithMany(m => m.Groups)
             .HasForeignKey(g => g.MentorId)
             .OnDelete(DeleteBehavior.Restrict);
     }

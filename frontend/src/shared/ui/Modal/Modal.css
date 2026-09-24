@@ -1,0 +1,132 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(28, 23, 48, 0.45);
+    backdrop-filter: blur(2px);
+
+    z-index: 1000;
+
+    animation: modal-backdrop-in 0.18s ease;
+}
+
+@keyframes modal-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-card {
+    width: 100%;
+    max-height: calc(100vh - 40px);
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 18px;
+
+    background: var(--color-surface);
+
+    box-shadow: var(--shadow-lg);
+
+    animation: modal-card-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-card-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-card--sm { max-width: 380px; }
+.modal-card--md { max-width: 460px; }
+.modal-card--lg { max-width: 640px; }
+
+
+/* =========================
+   HEADER
+========================= */
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px 22px 16px;
+
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header h3 {
+    margin: 0;
+
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+
+    color: var(--color-text);
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 9px;
+
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
+
+    cursor: pointer;
+
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.modal-close:hover {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+}
+
+
+/* =========================
+   BODY / FOOTER
+========================= */
+
+.modal-body {
+    padding: 20px 22px;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    padding: 16px 22px 20px;
+
+    border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 480px) {
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}

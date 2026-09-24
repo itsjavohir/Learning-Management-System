@@ -16,7 +16,6 @@ namespace CRM.WebApi.Controllers;
 public class UsersController(IMediator mediator) : BaseController
 {
     [HttpPost]
-
     public async Task<IActionResult> Create ([FromBody]CreateUserRequest request,CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new CreateUserCommand(request),cancellationToken);
@@ -47,7 +46,7 @@ public class UsersController(IMediator mediator) : BaseController
         return Ok(result);
     }
     
-    [HttpDelete]
+    [HttpDelete("{Id}")]
     public async Task<IActionResult> Delete (Guid Id,CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new DeleteUserCommand(Id),cancellationToken);

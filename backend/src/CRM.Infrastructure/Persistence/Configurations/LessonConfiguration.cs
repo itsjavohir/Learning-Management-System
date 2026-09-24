@@ -1,0 +1,41 @@
+using CRM.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace CRM.Infrastructure.Persistence.Configurations;
+
+public class LessonConfiguration : IEntityTypeConfiguration<Lesson>
+{
+    public void Configure(EntityTypeBuilder<Lesson> builder)
+    {
+        builder.HasKey(l => l.Id);
+
+        builder.Property(l => l.WeekNumber)
+            .IsRequired();
+
+        builder.Property(l => l.LessonDate)
+            .IsRequired();
+
+        builder.Property(l => l.Title)
+            .HasMaxLength(200);
+
+        builder.Property(l => l.Description)
+            .HasMaxLength(2000);
+
+        builder.Property(l => l.HomeworkDescription)
+            .HasMaxLength(2000);
+
+        builder.Property(l => l.MaterialUrl)
+            .HasMaxLength(500);
+
+        builder.Property(l => l.IsCompleted)
+            .IsRequired();
+
+        builder.HasOne(l => l.Group)
+            .WithMany(g => g.Lessons)
+            .HasForeignKey(l => l.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(l => new { l.GroupId, l.WeekNumber });
+    }
+}

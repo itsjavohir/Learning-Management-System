@@ -23,4 +23,5 @@ public class User : BaseEntity
 
     public Student? Student { get; set; }
     public Mentor? Mentor { get; set; }
+    public Profile? Profile { get; set; }
 }

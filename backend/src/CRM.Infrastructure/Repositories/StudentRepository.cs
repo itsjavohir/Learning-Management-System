@@ -19,7 +19,10 @@ public class StudentRepository(AppDbContext dbcontext) : IStudentRepository
 
     public async Task<List<Student>> GetAllAsync(CancellationToken cancellationToken)
     {
-       return await dbcontext.Students.AsNoTracking().ToListAsync(cancellationToken);
+       return await dbcontext.Students
+            .AsNoTracking()
+            .Include(s => s.User)
+            .ToListAsync(cancellationToken);
     }
 
     public void Update(Student student)
@@ -27,10 +30,18 @@ public class StudentRepository(AppDbContext dbcontext) : IStudentRepository
         dbcontext.Students.Update(student);
         student.MarkAsUpdated();
     }
-     public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-{
-    return await dbcontext.Students
-        .Include(s => s.User)
-        .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-}
+
+    public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await dbcontext.Students
+            .Include(s => s.User)
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
+
+    public async Task<Student?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        return await dbcontext.Students
+            .Include(s => s.User)
+            .FirstOrDefaultAsync(s => s.UserId == userId, cancellationToken);
+    }
 }

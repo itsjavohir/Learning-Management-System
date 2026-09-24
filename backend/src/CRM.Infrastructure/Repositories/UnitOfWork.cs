@@ -13,6 +13,9 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IRoleRepository? _rolerepository;
     private ICourseRepository? _course;
     private IGroupRepository ? _group;
+    private IGroupStudentRepository? _groupStudent;
+    private IProfileRepository? _profile;
+    private ILessonRepository? _lesson;
 
     private   IThemeSettingsRepository ? _themesettingsrepository;
 
@@ -28,16 +31,20 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     public IVerificationCodeRepository VerificationCode =>
         _verificationCode ??= new VerificationCodeRepository(context);
 
-        public IRoleRepository Role =>
+    public IRoleRepository Role =>
         _rolerepository ??= new RoleRepository(context);
 
-        public ICourseRepository Course => _course ??= new CourseRepository(context) ;
+    public ICourseRepository Course => _course ??= new CourseRepository(context) ;
 
-        public IGroupRepository Group => _group ??= new GroupRepository(context);
+    public IGroupRepository Group => _group ??= new GroupRepository(context);
 
-        public   IThemeSettingsRepository ThemeSettings => _themesettingsrepository ??= new ThemeSettingsRepository(context);
+    public IGroupStudentRepository GroupStudent => _groupStudent ??= new GroupStudentRepository(context);
 
-    
+    public IProfileRepository Profile => _profile ??= new ProfileRepository(context);
+
+    public ILessonRepository Lesson => _lesson ??= new LessonRepository(context);
+
+    public   IThemeSettingsRepository ThemeSettings => _themesettingsrepository ??= new ThemeSettingsRepository(context);
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

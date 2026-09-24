@@ -13,10 +13,25 @@ public class StudentConfiguration : IEntityTypeConfiguration<Student>
         builder.Property(s => s.Balance)
             .HasColumnType("decimal(18,2)");
 
-       builder.HasOne(s => s.User)
-    .WithOne(u => u.Student)
-    .HasForeignKey<Student>(s => s.UserId)
-    .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(s => s.PhotoUrl)
+            .HasMaxLength(500);
+
+        builder.Property(s => s.Phone)
+            .HasMaxLength(20);
+
+        builder.Property(s => s.TelegramUsername)
+            .HasMaxLength(64);
+
+        builder.Property(s => s.GithubUrl)
+            .HasMaxLength(500);
+
+        builder.Property(s => s.AboutMe)
+            .HasMaxLength(2000);
+
+        builder.HasOne(s => s.User)
+            .WithOne(u => u.Student)
+            .HasForeignKey<Student>(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(s => s.UserId)
             .IsUnique();

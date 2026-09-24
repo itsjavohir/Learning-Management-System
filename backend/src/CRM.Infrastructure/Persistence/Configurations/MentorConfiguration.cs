@@ -10,16 +10,25 @@ public class MentorConfiguration : IEntityTypeConfiguration<Mentor>
     {
         builder.HasKey(m => m.Id);
 
+        builder.Property(m => m.Phone)
+            .HasMaxLength(20);
+
         builder.Property(m => m.Specialization)
             .HasMaxLength(200);
 
         builder.Property(m => m.Bio)
             .HasMaxLength(2000);
 
-    builder.HasOne(m => m.User)
-    .WithOne(u => u.Mentor)
-    .HasForeignKey<Mentor>(m => m.UserId)
-    .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(m => m.LinkedInUrl)
+            .HasMaxLength(500);
+
+        builder.Property(m => m.GithubUrl)
+            .HasMaxLength(500);
+
+        builder.HasOne(m => m.User)
+            .WithOne(u => u.Mentor)
+            .HasForeignKey<Mentor>(m => m.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(m => m.UserId)
             .IsUnique();

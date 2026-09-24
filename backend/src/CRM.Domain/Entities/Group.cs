@@ -16,4 +16,5 @@ public class Group : BaseEntity
     public int MaxStudents { get; set; } = 15;
 
     public ICollection<GroupStudent> GroupStudents { get; set; } = new List<GroupStudent>();
+    public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }
