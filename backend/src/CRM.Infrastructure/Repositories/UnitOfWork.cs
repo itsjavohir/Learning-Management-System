@@ -16,6 +16,8 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     private IGroupStudentRepository? _groupStudent;
     private IProfileRepository? _profile;
     private ILessonRepository? _lesson;
+    private IAttendanceRepository? _attendance;
+    private ISeasonOverrideRepository? _seasonOverride;
 
     private   IThemeSettingsRepository ? _themesettingsrepository;
 
@@ -43,6 +45,10 @@ public class UnitOfWork(AppDbContext context) : IUnitOfWork
     public IProfileRepository Profile => _profile ??= new ProfileRepository(context);
 
     public ILessonRepository Lesson => _lesson ??= new LessonRepository(context);
+
+    public IAttendanceRepository Attendance => _attendance ??= new AttendanceRepository(context);
+
+    public ISeasonOverrideRepository SeasonOverride => _seasonOverride ??= new SeasonOverrideRepository(context);
 
     public   IThemeSettingsRepository ThemeSettings => _themesettingsrepository ??= new ThemeSettingsRepository(context);
 

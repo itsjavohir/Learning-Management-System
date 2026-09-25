@@ -17,6 +17,8 @@ import AdministrationPage from '../pages/administration-page/AdministrationPage'
 import BranchesPage from '../pages/branches-page/BranchesPage';
 import SmsMailingsPage from '../pages/sms-mailings-page/SmsMailingsPage';
 import AccountingPage from '../pages/accounting-page/AccountingPage';
+import SettingsPage from '../pages/settings-page/SettingsPage';
+import ThemeSettingsPage from '../pages/settings-page/ThemeSettingsPage';
 import { ProtectedRoute } from '../features/auth';
 import { AdminLayout } from '../widgets/admin-layout';
 
@@ -56,6 +58,8 @@ function App() {
                     <Route path="/sms-mailings" element={<SmsMailingsPage />} />
                     <Route path="/accounting" element={<AccountingPage />} />
                     <Route path="/mentor-profile" element={<MentorProfilePage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/settings/theme" element={<ThemeSettingsPage />} />
                 </Route>
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

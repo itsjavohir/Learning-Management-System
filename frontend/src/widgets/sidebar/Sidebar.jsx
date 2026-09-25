@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../entities/auth';
+import { NAV_GROUPS } from './sidebarConfig';
 import './Sidebar.css';
 
 /* ---------- icons ---------- */
@@ -121,36 +122,6 @@ function ChevronIcon() {
     );
 }
 
-/* ---------- nav structure ---------- */
-
-const NAV_GROUPS = [
-    {
-        label: 'Main',
-        items: [
-            { to: '/', label: 'Dashboard', end: true, icon: DashboardIcon },
-            {
-                label: 'Students',
-                icon: StudentsIcon,
-                children: [
-                    { to: '/users', label: 'All students' },
-                    { to: '/students/graduates', label: 'Graduates' },
-                    { to: '/students/enroll', label: 'Enroll' },
-                    { to: '/students/left-courses', label: 'Left Courses' },
-                ],
-            },
-            { to: '/rewards', label: 'Rewards', icon: RewardsIcon },
-            { to: '/groups', label: 'Groups', icon: GroupsIcon },
-            { to: '/employees', label: 'Employees', icon: EmployeesIcon },
-            { to: '/timetable', label: 'TimeTable', icon: TimeTableIcon },
-            { to: '/courses', label: 'Courses', icon: CoursesIcon },
-            { to: '/administration', label: 'Administration', icon: AdministrationIcon },
-            { to: '/branches', label: 'Branches', icon: BranchesIcon },
-            { to: '/sms-mailings', label: 'SMS mailings', icon: SmsIcon },
-            { to: '/accounting', label: 'Accounting', icon: AccountingIcon },
-        ],
-    },
-];
-
 function CollapsibleNavItem({ item }) {
     const location = useLocation();
     const hasActiveChild = item.children.some((child) => location.pathname === child.to);
@@ -215,10 +186,28 @@ function Sidebar() {
                         <p className="sidebar-group-label">{group.label}</p>
                         {group.items.map((item) => {
                             if (item.children) {
-                                return <CollapsibleNavItem item={item} key={item.label} />;
+                                const iconMap = {
+                                    students: StudentsIcon,
+                                };
+                                return <CollapsibleNavItem item={{ ...item, icon: iconMap[item.icon] || StudentsIcon }} key={item.label} />;
                             }
 
-                            const Icon = item.icon;
+                            const iconMap = {
+                                dashboard: DashboardIcon,
+                                students: StudentsIcon,
+                                rewards: RewardsIcon,
+                                groups: GroupsIcon,
+                                employees: EmployeesIcon,
+                                timetable: TimeTableIcon,
+                                courses: CoursesIcon,
+                                administration: AdministrationIcon,
+                                branches: BranchesIcon,
+                                sms: SmsIcon,
+                                accounting: AccountingIcon,
+                                settings: ProfileIcon,
+                            };
+                            const Icon = iconMap[item.icon] || DashboardIcon;
+
                             return (
                                 <NavLink
                                     key={item.to}

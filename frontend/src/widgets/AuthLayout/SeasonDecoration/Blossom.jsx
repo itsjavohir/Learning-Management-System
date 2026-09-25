@@ -8,17 +8,17 @@ function Blossom() {
     return (
         <div className="season-decoration">
             {particles.map((_, i) => {
-                const size = 7 + Math.random() * 6;
+                const size = 7 + (i % 6);
                 return (
                     <span
                         key={i}
                         className="blossom-particle"
                         style={{
-                            left: `${Math.random() * 100}%`,
+                            left: `${(i * 43) % 100}%`,
                             width: size,
                             height: size,
-                            animationDuration: `${8 + Math.random() * 6}s`,
-                            animationDelay: `${Math.random() * 8}s`,
+                            animationDuration: `${8 + (i % 6)}s`,
+                            animationDelay: `${i % 8}s`,
                         }}
                     />
                 );

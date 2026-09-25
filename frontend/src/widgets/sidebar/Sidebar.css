@@ -228,6 +228,49 @@
     background: var(--color-accent-soft);
 }
 
+.sidebar-settings-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 10px 12px;
+    border-radius: 11px;
+
+    background: var(--color-accent-soft);
+    border: 1px solid var(--color-border);
+}
+
+.sidebar-setting-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.sidebar-setting-toggle input {
+    accent-color: var(--color-accent);
+    width: 15px;
+    height: 15px;
+    margin: 0;
+}
+
+.sidebar-setting-select {
+    width: 100%;
+    padding: 8px 10px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 12.5px;
+}
+
 
 /* =========================
    LOGOUT

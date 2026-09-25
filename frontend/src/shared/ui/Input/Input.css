@@ -1,0 +1,8 @@
+.seasonal-input {
+    position: relative;
+    display: block;
+}
+
+.seasonal-input input {
+    width: 100%;
+}

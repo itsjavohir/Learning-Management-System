@@ -7,6 +7,7 @@ import {
     useUpdateGroup,
     useDeleteGroup,
 } from '../../entities/group';
+import { Modal, Button, ConfirmDialog } from '../../shared/ui';
 import '../users-page/UsersPage.css';
 import './GroupsPage.css';
 
@@ -26,6 +27,8 @@ function toDateInputValue(value) {
 function GroupsPage() {
     const [form, setForm] = useState(EMPTY_FORM);
     const [editingId, setEditingId] = useState(null);
+    const [modalState, setModalState] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState(null);
 
     const { data: groups = [], isLoading, isError, error } = useGroups();
     const { data: courses = [] } = useCourses();
@@ -38,6 +41,30 @@ function GroupsPage() {
     const isSaving = createGroup.isPending || updateGroup.isPending;
     const saveError = createGroup.error || updateGroup.error;
 
+    const openCreateModal = () => {
+        setEditingId(null);
+        setForm(EMPTY_FORM);
+        setModalState({ mode: 'create' });
+    };
+
+    const openEditModal = (group) => {
+        setEditingId(group.id);
+        setForm({
+            name: group.name ?? '',
+            courseId: group.courseId ?? '',
+            mentorId: group.mentorId ?? '',
+            startDate: toDateInputValue(group.startDate),
+            maxStudents: group.maxStudents ?? '',
+        });
+        setModalState({ mode: 'edit' });
+    };
+
+    const closeModal = () => {
+        setModalState(null);
+        setEditingId(null);
+        setForm(EMPTY_FORM);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -49,12 +76,7 @@ function GroupsPage() {
                     startDate: form.startDate,
                     maxStudents: Number(form.maxStudents),
                 },
-                {
-                    onSuccess: () => {
-                        setForm(EMPTY_FORM);
-                        setEditingId(null);
-                    },
-                },
+                { onSuccess: closeModal },
             );
             return;
         }
@@ -63,34 +85,21 @@ function GroupsPage() {
             {
                 name: form.name,
                 courseId: form.courseId,
-                // TODO: backend CreateGroup looks up mentor by UserId, not Mentor.Id.
-                // Sending mentor.id from GET /mentors until the backend is fixed.
                 mentorId: form.mentorId,
                 startDate: form.startDate,
                 maxStudents: Number(form.maxStudents),
             },
-            { onSuccess: () => setForm(EMPTY_FORM) },
+            { onSuccess: closeModal },
         );
     };
 
-    const handleEdit = (group) => {
-        setEditingId(group.id);
-        setForm({
-            name: group.name ?? '',
-            courseId: group.courseId ?? '',
-            mentorId: group.mentorId ?? '',
-            startDate: toDateInputValue(group.startDate),
-            maxStudents: group.maxStudents ?? '',
-        });
-    };
-
-    const handleDelete = (id) => {
-        if (!confirm('Delete this group?')) return;
-        deleteGroup.mutate(id, {
+    const handleDeleteConfirm = () => {
+        if (!deleteTarget) return;
+        deleteGroup.mutate(deleteTarget.id, {
             onSuccess: () => {
-                if (editingId === id) {
-                    setForm(EMPTY_FORM);
-                    setEditingId(null);
+                setDeleteTarget(null);
+                if (editingId === deleteTarget.id) {
+                    closeModal();
                 }
             },
         });
@@ -109,77 +118,10 @@ function GroupsPage() {
         <div className="users-page">
             <div className="users-header">
                 <h1>Groups</h1>
-                <span className="users-count">{groups.length} total</span>
-            </div>
-
-            <div className="create-card">
-                <h3>{editingId ? 'Edit group' : 'Add new group'}</h3>
-                <form onSubmit={handleSubmit} className="create-form create-form--groups">
-                    {saveError && (
-                        <div className="create-form-error">
-                            {saveError?.response?.data?.message || 'Error saving group'}
-                        </div>
-                    )}
-
-                    <input
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    />
-                    {!editingId && (
-                        <>
-                            <select
-                                value={form.courseId}
-                                onChange={(e) => setForm({ ...form, courseId: e.target.value })}
-                            >
-                                <option value="">Course</option>
-                                {courses.map((course) => (
-                                    <option key={course.id} value={course.id}>
-                                        {course.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                value={form.mentorId}
-                                onChange={(e) => setForm({ ...form, mentorId: e.target.value })}
-                            >
-                                <option value="">Mentor</option>
-                                {mentors.map((mentor) => (
-                                    <option key={mentor.id} value={mentor.id}>
-                                        {mentor.firstName} {mentor.lastName}
-                                    </option>
-                                ))}
-                            </select>
-                        </>
-                    )}
-                    <input
-                        type="date"
-                        value={form.startDate}
-                        onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        min="1"
-                        placeholder="Max students"
-                        value={form.maxStudents}
-                        onChange={(e) => setForm({ ...form, maxStudents: e.target.value })}
-                    />
-                    <button type="submit" disabled={isSaving}>
-                        {isSaving ? 'Saving...' : editingId ? 'Save' : 'Create'}
-                    </button>
-                    {editingId && (
-                        <button
-                            type="button"
-                            className="cancel-btn"
-                            onClick={() => {
-                                setEditingId(null);
-                                setForm(EMPTY_FORM);
-                            }}
-                        >
-                            Cancel
-                        </button>
-                    )}
-                </form>
+                <div className="users-header-actions">
+                    <span className="users-count">{groups.length} total</span>
+                    <Button size="sm" onClick={openCreateModal}>Add group</Button>
+                </div>
             </div>
 
             <div className="users-table-wrap">
@@ -195,7 +137,6 @@ function GroupsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* TODO: confirm Group response fields with backend (mentorName vs mentorFullName) */}
                         {groups.map((group) => (
                             <tr key={group.id}>
                                 <td>{group.name}</td>
@@ -204,23 +145,113 @@ function GroupsPage() {
                                 <td>{toDateInputValue(group.startDate)}</td>
                                 <td>{group.maxStudents}</td>
                                 <td>
-                                    <button type="button" className="edit-btn" onClick={() => handleEdit(group)}>
-                                        Edit
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="delete-btn"
-                                        onClick={() => handleDelete(group.id)}
-                                        disabled={deleteGroup.isPending}
-                                    >
-                                        Delete
-                                    </button>
+                                    <div className="row-actions">
+                                        <Button size="sm" variant="ghost" onClick={() => openEditModal(group)}>
+                                            Edit
+                                        </Button>
+                                        <Button size="sm" variant="ghost" className="row-actions-delete" onClick={() => setDeleteTarget(group)}>
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <Modal
+                isOpen={!!modalState}
+                onClose={closeModal}
+                title={editingId ? 'Edit group' : 'Add new group'}
+                footer={
+                    <>
+                        <Button variant="secondary" onClick={closeModal} disabled={isSaving}>Cancel</Button>
+                        <Button type="submit" form="group-form" isLoading={isSaving}>
+                            {editingId ? 'Save changes' : 'Create group'}
+                        </Button>
+                    </>
+                }
+            >
+                <form id="group-form" className="user-form" onSubmit={handleSubmit}>
+                    {saveError && (
+                        <div className="create-form-error">
+                            {saveError?.response?.data?.message || 'Error saving group'}
+                        </div>
+                    )}
+
+                    <div className="user-form-field">
+                        <label>Name</label>
+                        <input
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className="user-form-row">
+                        <div className="user-form-field">
+                            <label>Course</label>
+                            <select
+                                value={form.courseId}
+                                onChange={(e) => setForm({ ...form, courseId: e.target.value })}
+                            >
+                                <option value="">Select course</option>
+                                {courses.map((course) => (
+                                    <option key={course.id} value={course.id}>{course.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="user-form-field">
+                            <label>Mentor</label>
+                            <select
+                                value={form.mentorId}
+                                onChange={(e) => setForm({ ...form, mentorId: e.target.value })}
+                            >
+                                <option value="">Select mentor</option>
+                                {mentors.map((mentor) => (
+                                    <option key={mentor.id} value={mentor.id}>{mentor.firstName} {mentor.lastName}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="user-form-row">
+                        <div className="user-form-field">
+                            <label>Start date</label>
+                            <input
+                                type="date"
+                                value={form.startDate}
+                                onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                            />
+                        </div>
+                        <div className="user-form-field">
+                            <label>Max students</label>
+                            <input
+                                type="number"
+                                min="1"
+                                value={form.maxStudents}
+                                onChange={(e) => setForm({ ...form, maxStudents: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                </form>
+            </Modal>
+
+            <ConfirmDialog
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={handleDeleteConfirm}
+                title="Delete group"
+                description={
+                    deleteTarget
+                        ? `This will permanently delete the group ${deleteTarget.name}. This action cannot be undone.`
+                        : ''
+                }
+                confirmLabel="Delete"
+                isLoading={deleteGroup.isPending}
+                error={deleteGroup.isError ? (deleteGroup.error?.response?.data?.message || 'Error deleting group') : null}
+            />
         </div>
     );
 }

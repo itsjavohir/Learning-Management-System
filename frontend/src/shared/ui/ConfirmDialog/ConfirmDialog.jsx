@@ -32,8 +32,11 @@ function ConfirmDialog({
                 </>
             }
         >
-            {error && <div className="confirm-dialog-error">{error}</div>}
-            {description && <p className="confirm-dialog-text">{description}</p>}
+            <div className="confirm-dialog-wrap">
+                <div className="confirm-dialog-icon" aria-hidden="true">!</div>
+                {error && <div className="confirm-dialog-error">{error}</div>}
+                {description && <p className="confirm-dialog-text">{description}</p>}
+            </div>
         </Modal>
     );
 }

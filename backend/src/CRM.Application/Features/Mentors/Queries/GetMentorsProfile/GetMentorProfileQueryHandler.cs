@@ -27,7 +27,11 @@ public class GetMentorProfileQueryHandler(IUnitOfWork unitOfWork)
             Email: mentor.User.Email,
             Specialization: mentor.Specialization,
             Bio: mentor.Bio,
-            ExperienceYears: mentor.ExperienceYears
+            ExperienceYears: mentor.ExperienceYears,
+            LinkedInUrl: mentor.LinkedInUrl,
+            GithubUrl: mentor.GithubUrl,
+            HireDate: mentor.HireDate,
+            IsActive: mentor.IsActive
         );
 
         return Result<MentorProfileResponse>.Ok(response);

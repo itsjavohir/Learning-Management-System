@@ -4,4 +4,4 @@ using MediatR;
 
 namespace CRM.Application.Features.Students.Queries;
 
-public class GetStudentProfileQuery(Guid Userid):IRequest<Result<StudentProfileResponse>>;
+public record GetStudentProfileQuery(Guid UserId) : IRequest<Result<StudentProfileResponse>>;

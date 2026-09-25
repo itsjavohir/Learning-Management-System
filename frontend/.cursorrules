@@ -26,3 +26,68 @@
 1. Перед кодом — план файлов, дождаться подтверждения
 2. Смотреть на существующие entities/user и features/login-by-phone 
    как образец стиля
+
+---
+
+## Seasonal UI Theme (entities/theme, widgets/AuthLayout/SeasonDecoration)
+
+Эти правила действуют только для файлов внутри:
+`src/entities/theme/**`, `src/widgets/AuthLayout/**`, `src/widgets/admin-layout/**`,
+`src/shared/ui/Button/**`, `src/shared/ui/Input/**`.
+
+### Архитектура фичи (FSD)
+
+```
+src/
+├── entities/
+│   └── theme/
+│       ├── model/
+│       │   ├── themeStore.js          // Zustand: season, event, transition, effects, uiAccents, mode
+│       │   ├── seasonalCalendar.js    // чистая функция: date → { season, event, transition }
+│       │   └── seasonThemeMap.js      // season/event → { background, palette, effects[], uiAccents[] }
+│       └── index.js                   // публичный API entity
+│
+├── widgets/
+│   └── AuthLayout/
+│       ├── AuthLayout.jsx
+│       ├── AuthLayout.css
+│       ├── backgrounds/
+│       │   ├── winter-village.jpg
+│       │   ├── spring-village.jpg
+│       │   ├── summer-village.jpg
+│       │   └── autumn-village.jpg
+│       └── SeasonDecoration/
+│           ├── SeasonDecoration.jsx
+│           ├── SeasonDecoration.css
+│           └── effects/
+│               ├── Snow.jsx
+│               ├── Snowman.jsx
+│               ├── ChristmasLights.jsx
+│               ├── ChristmasTree.jsx
+│               ├── Blossom.jsx
+│               ├── Sun.jsx
+│               ├── Leaves.jsx
+│               └── SnowParticlesOverlay.jsx
+│
+└── shared/
+    └── ui/
+        ├── Button/Button.jsx   // + опциональный сезонный акцент
+        └── Input/Input.jsx     // + опциональный сезонный акцент
+```
+
+### Жёсткие правила слоёв
+
+1. Даты и условия по месяцам живут только в `entities/theme/model/seasonalCalendar.js`. Ни один компонент, ни `pages/*`, ни `widgets/*` не содержит `if (month === ...)`.
+2. `pages/LoginPage`, `ForgotPasswordPage`, `ResetPasswordPage` не импортируют ничего из `entities/theme` или `SeasonDecoration` напрямую. Они оборачиваются в `<AuthLayout>` и используют `shared/ui/Button`, `shared/ui/Input` как обычно.
+3. `SeasonDecoration.jsx` только рендерит то, что отдал стор (`effects[]`), через `React.lazy` + `Suspense` — не решает сам, что показывать.
+4. Новый эффект = одна запись в `seasonThemeMap.js` + один файл в `effects/`. Никакой другой код не трогается.
+5. Стор темы — Zustand, по образцу `useAuthStore` (см. `entities/user` как референс стиля сторов в проекте).
+6. Стилизация — обычный CSS, дизайн-токены (цвета/переходы для сезонов) добавлять как CSS custom properties в `src/index.css`, рядом с существующими neumorphism-токенами, не заводить отдельную систему.
+
+### Конвенции по коду в этой фиче
+
+- JSX, не TSX — весь остальной проект на чистом JS.
+- Если override сезона забирается с бэкенда — это обычный `entities/theme/api`-модуль по аналогии с `entities/user`, запрос через `shared/api/axiosInstance.js`.
+- `syncWithDate()` вызывается один раз в `app/` при инициализации, не в каждой странице.
+- Обязательно `prefers-reduced-motion` — отключать эффекты, если у пользователя это включено в ОС.
+- Тяжёлые эффекты (частицы/canvas) — только через `React.lazy`, не блокировать первый рендер Login (критичный путь).

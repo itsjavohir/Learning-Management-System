@@ -4,5 +4,8 @@ public record UpdateMentorProfileRequest
 (
     string? Specialization,
     string? Bio,
-    int ExperienceYears
+    int ExperienceYears,
+    string? Phone,
+    string? LinkedInUrl,
+    string? GithubUrl
 );

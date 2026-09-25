@@ -26,7 +26,11 @@ public class GetAllMentorsQueryHandler(IUnitOfWork unitOfWork)
             Email: mentor.User.Email,
             Specialization: mentor.Specialization,
             Bio: mentor.Bio,
-            ExperienceYears: mentor.ExperienceYears
+            ExperienceYears: mentor.ExperienceYears,
+            LinkedInUrl: mentor.LinkedInUrl,
+            GithubUrl: mentor.GithubUrl,
+            HireDate: mentor.HireDate,
+            IsActive: mentor.IsActive
         )).ToList();
 
         return Result<List<MentorResponse>>.Ok(response);

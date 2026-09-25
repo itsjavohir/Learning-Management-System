@@ -9,18 +9,18 @@ function Sun() {
         <div className="season-decoration">
             <div className="sun-glow" />
             {sparkles.map((_, i) => {
-                const size = 3 + Math.random() * 3;
+                const size = 3 + (i % 3);
                 return (
                     <span
                         key={i}
                         className="sun-sparkle"
                         style={{
-                            top: `${Math.random() * 60}%`,
-                            right: `${Math.random() * 45}%`,
+                            top: `${(i * 29) % 60}%`,
+                            right: `${(i * 31) % 45}%`,
                             width: size,
                             height: size,
-                            animationDuration: `${2.5 + Math.random() * 2}s`,
-                            animationDelay: `${Math.random() * 3}s`,
+                            animationDuration: `${2.5 + (i % 2)}s`,
+                            animationDelay: `${i % 3}s`,
                         }}
                     />
                 );

@@ -12,7 +12,9 @@ public interface IUnitOfWork
     IGroupStudentRepository GroupStudent { get; }
     IProfileRepository Profile { get; }
     ILessonRepository Lesson { get; }
+    IAttendanceRepository Attendance { get; }
     IThemeSettingsRepository ThemeSettings { get; }
+    ISeasonOverrideRepository SeasonOverride { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

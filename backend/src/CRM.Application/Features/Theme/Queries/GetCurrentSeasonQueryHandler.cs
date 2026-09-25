@@ -3,34 +3,40 @@ using CRM.Application.Common.Wrappers;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Application.Interfaces.Services;
 using MediatR;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CRM.Application.Features.Theme.Queries.GetCurrentSeasonQuery;
 
 public class GetCurrentSeasonQueryHandler(
     IUnitOfWork unitOfWork,
-    ISeasonCalculator seasonCalculator,
-    IDateTimeProvider dateTimeProvider)
+    ISeasonalCalendarService seasonalCalendarService,
+    IDateTimeProvider dateTimeProvider,
+    IMemoryCache cache)
     : IRequestHandler<GetCurrentSeasonQuery, Result<SeasonResponse>>
 {
+    private const string CacheKey = "theme:current-season";
+
     public async Task<Result<SeasonResponse>> Handle(GetCurrentSeasonQuery query, CancellationToken cancellationToken)
     {
-        var settings = await unitOfWork.ThemeSettings.GetAsync(cancellationToken);
-
-        if (settings is not null && settings.IsOverrideEnabled && settings.ManualOverride is not null)
+        var cached = await cache.GetOrCreateAsync(CacheKey, async entry =>
         {
-            var overrideResponse = new SeasonResponse(
-                Season: settings.ManualOverride.Value,
-                IsManualOverride: true);
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+            var now = dateTimeProvider.UtcNow;
+            var seasonOverride = await unitOfWork.SeasonOverride.GetActiveAsync(cancellationToken);
 
-            return Result<SeasonResponse>.Ok(overrideResponse);
-        }
+            if (seasonOverride?.Season is not null)
+            {
+                return new SeasonResponse(
+                    seasonOverride.Season.Value,
+                    seasonalCalendarService.GetSeasonState(now).Event,
+                    0d,
+                    true);
+            }
 
-        var season = seasonCalculator.GetSeasonByDate(dateTimeProvider.UtcNow);
+            var state = seasonalCalendarService.GetSeasonState(now);
+            return new SeasonResponse(state.Season, state.Event, state.Transition, false);
+        });
 
-        var response = new SeasonResponse(
-            Season: season,
-            IsManualOverride: false);
-
-        return Result<SeasonResponse>.Ok(response);
+        return Result<SeasonResponse>.Ok(cached!);
     }
 }

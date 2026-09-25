@@ -131,3 +131,13 @@
 @keyframes btn-spin {
     to { transform: rotate(360deg); }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+
+    .btn:active {
+        transform: none;
+    }
+}

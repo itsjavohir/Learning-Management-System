@@ -8,7 +8,9 @@ public record MentorProfileResponse(
     string? Email,
     string? Specialization,
     string? Bio,
-    int ExperienceYears
+    int ExperienceYears,
+    string? LinkedInUrl,
+    string? GithubUrl,
+    DateTime HireDate,
+    bool IsActive
 );
-
-

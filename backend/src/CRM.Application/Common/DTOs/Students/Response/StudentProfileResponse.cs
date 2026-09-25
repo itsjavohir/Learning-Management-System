@@ -6,5 +6,12 @@ public record StudentProfileResponse(
     string LastName,
     string PhoneNumber,
     string? Email,
-    decimal Balance
+    decimal Balance,
+    string? PhotoUrl,
+    DateTime? DateOfBirth,
+    string? TelegramUsername,
+    string? GithubUrl,
+    string? AboutMe,
+    bool IsActive,
+    DateTime EnrollDate
 );

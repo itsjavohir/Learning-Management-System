@@ -1,3 +1,5 @@
+namespace CRM.Application.Common.DTOs.Mentors.Response;
+
 public record MentorResponse(
     Guid Id,
     string FirstName,
@@ -6,5 +8,9 @@ public record MentorResponse(
     string? Email,
     string? Specialization,
     string? Bio,
-    int ExperienceYears
+    int ExperienceYears,
+    string? LinkedInUrl,
+    string? GithubUrl,
+    DateTime HireDate,
+    bool IsActive
 );

@@ -22,6 +22,56 @@ namespace CRM.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CRM.Domain.Entities.Attendance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AbsenceReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("LateMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("MarkedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("MarkedByMentorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MentorNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MarkedByMentorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("LessonId", "StudentId")
+                        .IsUnique();
+
+                    b.ToTable("Attendances");
+                });
+
             modelBuilder.Entity("CRM.Domain.Entities.Course", b =>
                 {
                     b.Property<Guid>("Id")
@@ -110,7 +160,20 @@ namespace CRM.Infrastructure.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("LeftAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RemoveReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TransferredFromGroupStudentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TransferredToGroupStudentId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -120,10 +183,105 @@ namespace CRM.Infrastructure.Migrations
 
                     b.HasIndex("StudentId");
 
+                    b.HasIndex("TransferredFromGroupStudentId");
+
+                    b.HasIndex("TransferredToGroupStudentId");
+
                     b.HasIndex("GroupId", "StudentId")
                         .IsUnique();
 
                     b.ToTable("GroupStudents");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Lesson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("HomeworkDescription")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LessonDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MaterialUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("WeekNumber")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId", "WeekNumber");
+
+                    b.ToTable("Lessons");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.LessonScore", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("MentorFeedback")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<decimal>("Score")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("numeric(5,2)");
+
+                    b.Property<DateTime>("ScoredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ScoredByMentorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScoredByMentorId");
+
+                    b.HasIndex("StudentId");
+
+                    b.HasIndex("LessonId", "StudentId")
+                        .IsUnique();
+
+                    b.ToTable("LessonScore");
                 });
 
             modelBuilder.Entity("CRM.Domain.Entities.Mentor", b =>
@@ -142,6 +300,24 @@ namespace CRM.Infrastructure.Migrations
                     b.Property<int>("ExperienceYears")
                         .HasColumnType("integer");
 
+                    b.Property<string>("GithubUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LinkedInUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<string>("Specialization")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -158,6 +334,68 @@ namespace CRM.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Mentors");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Profile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AboutMe")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("GithubUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LinkedInUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("TelegramUsername")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("CRM.Domain.Entities.Role", b =>
@@ -208,17 +446,115 @@ namespace CRM.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("CRM.Domain.Entities.Schedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("interval");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("RecurringFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("RecurringTo")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Room")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("interval");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId", "DayOfWeek");
+
+                    b.ToTable("Schedule");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.SeasonOverride", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Season")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SetAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("SetByUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SetAtUtc")
+                        .IsDescending();
+
+                    b.HasIndex("SetByUserId");
+
+                    b.ToTable("SeasonOverrides");
+                });
+
             modelBuilder.Entity("CRM.Domain.Entities.Student", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("AboutMe")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("EnrollDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GithubUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("TelegramUsername")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -372,6 +708,32 @@ namespace CRM.Infrastructure.Migrations
                     b.ToTable("VerificationCodes");
                 });
 
+            modelBuilder.Entity("CRM.Domain.Entities.Attendance", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRM.Domain.Entities.Mentor", "MarkedByMentor")
+                        .WithMany()
+                        .HasForeignKey("MarkedByMentorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRM.Domain.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("MarkedByMentor");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("CRM.Domain.Entities.Group", b =>
                 {
                     b.HasOne("CRM.Domain.Entities.Course", "Course")
@@ -381,7 +743,7 @@ namespace CRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CRM.Domain.Entities.Mentor", "Mentor")
-                        .WithMany()
+                        .WithMany("Groups")
                         .HasForeignKey("MentorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -400,12 +762,63 @@ namespace CRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("CRM.Domain.Entities.Student", "Student")
-                        .WithMany()
+                        .WithMany("GroupStudents")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CRM.Domain.Entities.GroupStudent", "TransferredFrom")
+                        .WithMany()
+                        .HasForeignKey("TransferredFromGroupStudentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRM.Domain.Entities.GroupStudent", "TransferredTo")
+                        .WithMany()
+                        .HasForeignKey("TransferredToGroupStudentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Group");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("TransferredFrom");
+
+                    b.Navigation("TransferredTo");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Lesson", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.Group", "Group")
+                        .WithMany("Lessons")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.LessonScore", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.Lesson", "Lesson")
+                        .WithMany()
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CRM.Domain.Entities.Mentor", "ScoredByMentor")
+                        .WithMany()
+                        .HasForeignKey("ScoredByMentorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRM.Domain.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Lesson");
+
+                    b.Navigation("ScoredByMentor");
 
                     b.Navigation("Student");
                 });
@@ -419,6 +832,37 @@ namespace CRM.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Profile", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.User", "User")
+                        .WithOne("Profile")
+                        .HasForeignKey("CRM.Domain.Entities.Profile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Schedule", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.SeasonOverride", b =>
+                {
+                    b.HasOne("CRM.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("SetByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CRM.Domain.Entities.Student", b =>
@@ -462,6 +906,13 @@ namespace CRM.Infrastructure.Migrations
             modelBuilder.Entity("CRM.Domain.Entities.Group", b =>
                 {
                     b.Navigation("GroupStudents");
+
+                    b.Navigation("Lessons");
+                });
+
+            modelBuilder.Entity("CRM.Domain.Entities.Mentor", b =>
+                {
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("CRM.Domain.Entities.Role", b =>
@@ -469,9 +920,16 @@ namespace CRM.Infrastructure.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("CRM.Domain.Entities.Student", b =>
+                {
+                    b.Navigation("GroupStudents");
+                });
+
             modelBuilder.Entity("CRM.Domain.Entities.User", b =>
                 {
                     b.Navigation("Mentor");
+
+                    b.Navigation("Profile");
 
                     b.Navigation("Student");
                 });

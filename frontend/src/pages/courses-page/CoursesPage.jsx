@@ -5,6 +5,7 @@ import {
     useUpdateCourse,
     useDeleteCourse,
 } from '../../entities/course';
+import { Modal, Button, ConfirmDialog } from '../../shared/ui';
 import '../users-page/UsersPage.css';
 import './CoursesPage.css';
 
@@ -18,6 +19,8 @@ const EMPTY_FORM = {
 function CoursesPage() {
     const [form, setForm] = useState(EMPTY_FORM);
     const [editingId, setEditingId] = useState(null);
+    const [modalState, setModalState] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState(null);
 
     const { data: courses = [], isLoading, isError, error } = useCourses();
     const createCourse = useCreateCourse();
@@ -26,6 +29,29 @@ function CoursesPage() {
 
     const isSaving = createCourse.isPending || updateCourse.isPending;
     const saveError = createCourse.error || updateCourse.error;
+
+    const openCreateModal = () => {
+        setEditingId(null);
+        setForm(EMPTY_FORM);
+        setModalState({ mode: 'create' });
+    };
+
+    const openEditModal = (course) => {
+        setEditingId(course.id);
+        setForm({
+            name: course.name ?? '',
+            description: course.description ?? '',
+            durationWeeks: course.durationWeeks ?? '',
+            isActive: course.isActive ?? true,
+        });
+        setModalState({ mode: 'edit' });
+    };
+
+    const closeModal = () => {
+        setModalState(null);
+        setEditingId(null);
+        setForm(EMPTY_FORM);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -39,36 +65,21 @@ function CoursesPage() {
         if (editingId) {
             updateCourse.mutate(
                 { id: editingId, ...payload, isActive: form.isActive },
-                { onSuccess: () => {
-                    setForm(EMPTY_FORM);
-                    setEditingId(null);
-                } },
+                { onSuccess: closeModal },
             );
             return;
         }
 
-        createCourse.mutate(payload, {
-            onSuccess: () => setForm(EMPTY_FORM),
-        });
+        createCourse.mutate(payload, { onSuccess: closeModal });
     };
 
-    const handleEdit = (course) => {
-        setEditingId(course.id);
-        setForm({
-            name: course.name ?? '',
-            description: course.description ?? '',
-            durationWeeks: course.durationWeeks ?? '',
-            isActive: course.isActive ?? true,
-        });
-    };
-
-    const handleDelete = (id) => {
-        if (!confirm('Delete this course?')) return;
-        deleteCourse.mutate(id, {
+    const handleDeleteConfirm = () => {
+        if (!deleteTarget) return;
+        deleteCourse.mutate(deleteTarget.id, {
             onSuccess: () => {
-                if (editingId === id) {
-                    setForm(EMPTY_FORM);
-                    setEditingId(null);
+                setDeleteTarget(null);
+                if (editingId === deleteTarget.id) {
+                    closeModal();
                 }
             },
         });
@@ -87,61 +98,10 @@ function CoursesPage() {
         <div className="users-page">
             <div className="users-header">
                 <h1>Courses</h1>
-                <span className="users-count">{courses.length} total</span>
-            </div>
-
-            <div className="create-card">
-                <h3>{editingId ? 'Edit course' : 'Add new course'}</h3>
-                <form onSubmit={handleSubmit} className="create-form create-form--courses">
-                    {saveError && (
-                        <div className="create-form-error">
-                            {saveError?.response?.data?.message || 'Error saving course'}
-                        </div>
-                    )}
-
-                    <input
-                        placeholder="Name"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    />
-                    <input
-                        placeholder="Description"
-                        value={form.description}
-                        onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        min="1"
-                        placeholder="Duration (weeks)"
-                        value={form.durationWeeks}
-                        onChange={(e) => setForm({ ...form, durationWeeks: e.target.value })}
-                    />
-                    {editingId && (
-                        <label className="active-toggle">
-                            <input
-                                type="checkbox"
-                                checked={form.isActive}
-                                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                            />
-                            Active
-                        </label>
-                    )}
-                    <button type="submit" disabled={isSaving}>
-                        {isSaving ? 'Saving...' : editingId ? 'Save' : 'Create'}
-                    </button>
-                    {editingId && (
-                        <button
-                            type="button"
-                            className="cancel-btn"
-                            onClick={() => {
-                                setEditingId(null);
-                                setForm(EMPTY_FORM);
-                            }}
-                        >
-                            Cancel
-                        </button>
-                    )}
-                </form>
+                <div className="users-header-actions">
+                    <span className="users-count">{courses.length} total</span>
+                    <Button size="sm" onClick={openCreateModal}>Add course</Button>
+                </div>
             </div>
 
             <div className="users-table-wrap">
@@ -156,7 +116,6 @@ function CoursesPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* TODO: confirm Course response fields with backend */}
                         {courses.map((course) => (
                             <tr key={course.id}>
                                 <td>{course.name}</td>
@@ -167,23 +126,95 @@ function CoursesPage() {
                                     {course.isActive ? 'Active' : 'Inactive'}
                                 </td>
                                 <td>
-                                    <button type="button" className="edit-btn" onClick={() => handleEdit(course)}>
-                                        Edit
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="delete-btn"
-                                        onClick={() => handleDelete(course.id)}
-                                        disabled={deleteCourse.isPending}
-                                    >
-                                        Delete
-                                    </button>
+                                    <div className="row-actions">
+                                        <Button size="sm" variant="ghost" onClick={() => openEditModal(course)}>
+                                            Edit
+                                        </Button>
+                                        <Button size="sm" variant="ghost" className="row-actions-delete" onClick={() => setDeleteTarget(course)}>
+                                            Delete
+                                        </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <Modal
+                isOpen={!!modalState}
+                onClose={closeModal}
+                title={editingId ? 'Edit course' : 'Add new course'}
+                footer={
+                    <>
+                        <Button variant="secondary" onClick={closeModal} disabled={isSaving}>Cancel</Button>
+                        <Button type="submit" form="course-form" isLoading={isSaving}>
+                            {editingId ? 'Save changes' : 'Create course'}
+                        </Button>
+                    </>
+                }
+            >
+                <form id="course-form" className="user-form" onSubmit={handleSubmit}>
+                    {saveError && (
+                        <div className="create-form-error">
+                            {saveError?.response?.data?.message || 'Error saving course'}
+                        </div>
+                    )}
+
+                    <div className="user-form-field">
+                        <label>Name</label>
+                        <input
+                            value={form.name}
+                            onChange={(e) => setForm({ ...form, name: e.target.value })}
+                            autoFocus
+                        />
+                    </div>
+
+                    <div className="user-form-field">
+                        <label>Description</label>
+                        <input
+                            value={form.description}
+                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        />
+                    </div>
+
+                    <div className="user-form-field">
+                        <label>Duration (weeks)</label>
+                        <input
+                            type="number"
+                            min="1"
+                            value={form.durationWeeks}
+                            onChange={(e) => setForm({ ...form, durationWeeks: e.target.value })}
+                        />
+                    </div>
+
+                    {editingId && (
+                        <label className="settings-option">
+                            <span>Active</span>
+                            <input
+                                type="checkbox"
+                                checked={form.isActive}
+                                onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                            />
+                        </label>
+                    )}
+                </form>
+            </Modal>
+
+            <ConfirmDialog
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={handleDeleteConfirm}
+                title="Delete course"
+                description={
+                    deleteTarget
+                        ? `This will permanently delete ${deleteTarget.name}. This action cannot be undone.`
+                        : ''
+                }
+                confirmLabel="Delete"
+                isLoading={deleteCourse.isPending}
+                error={deleteCourse.isError ? (deleteCourse.error?.response?.data?.message || 'Error deleting course') : null}
+            />
         </div>
     );
 }

@@ -21,17 +21,20 @@ public class ForgotPasswordCommandHandler(
     public async Task<Result<bool>> Handle(ForgotPasswordCommand command, CancellationToken cancellationToken)
     {
         var request = command.Request;
+        var destination = request.Channel == VerificationChannel.Telegram
+            ? request.PhoneNumber
+            : request.Email;
+
+        if (string.IsNullOrWhiteSpace(destination))
+            return Result<bool>.Ok(true);
 
         var user = request.Channel == VerificationChannel.Telegram
-            ? await unitOfWork.User.GetByPhoneNumberAsync(request.PhoneNumber, cancellationToken)
-            : await unitOfWork.User.GetByEmailAsync(request.Email!, cancellationToken);
+            ? await unitOfWork.User.GetByPhoneNumberAsync(destination, cancellationToken)
+            : await unitOfWork.User.GetByEmailAsync(destination, cancellationToken);
 
         if (user is not null)
         {
             var ttlSeconds = telegramOptions.Value.DefaultTtlSeconds;
-            var destination = request.Channel == VerificationChannel.Telegram
-                ? request.PhoneNumber
-                : request.Email!;
 
             var channel = channelResolver.Resolve(request.Channel);
 

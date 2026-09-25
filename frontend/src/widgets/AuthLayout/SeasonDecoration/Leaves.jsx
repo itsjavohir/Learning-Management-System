@@ -8,17 +8,17 @@ function Leaves() {
     return (
         <div className="season-decoration">
             {particles.map((_, i) => {
-                const size = 8 + Math.random() * 6;
+                const size = 8 + (i % 6);
                 return (
                     <span
                         key={i}
                         className="leaf-particle"
                         style={{
-                            left: `${Math.random() * 100}%`,
+                            left: `${(i * 47) % 100}%`,
                             width: size,
                             height: size,
-                            animationDuration: `${8 + Math.random() * 7}s`,
-                            animationDelay: `${Math.random() * 8}s`,
+                            animationDuration: `${8 + (i % 7)}s`,
+                            animationDelay: `${i % 8}s`,
                         }}
                     />
                 );

@@ -31,7 +31,14 @@ public class UpdateStudentBalanceCommandHandler(IUnitOfWork unitOfWork)
             student.User.LastName,
             student.User.PhoneNumber,
             student.User.Email,
-            student.Balance
+            student.Balance,
+            student.PhotoUrl,
+            student.DateOfBirth,
+            student.TelegramUsername,
+            student.GithubUrl,
+            student.AboutMe,
+            student.IsActive,
+            student.EnrollDate
         );
 
         return Result<StudentProfileResponse>.Ok(response);

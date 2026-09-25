@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 
 // DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -39,6 +40,7 @@ builder.Services.AddScoped<IVerificationChannel, TelegramVerificationChannel>();
 builder.Services.AddScoped<IVerificationChannel, EmailVerificationChannel>();
 builder.Services.AddScoped<IVerificationChannelResolver, VerificationChannelResolver>();
 builder.Services.AddScoped<ISeasonCalculator, SeasonCalculator>();
+builder.Services.AddScoped<ISeasonalCalendarService, SeasonalCalendarService>();
 builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
 // Telegram
@@ -136,7 +138,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using CRM.Application.Common.DTOs.Students.Request;
 using CRM.Application.Features.Students.Commands.UpdateStudentBalance;
+using CRM.Application.Features.Students.Commands.UpdateStudentProfile;
 using CRM.Application.Features.Students.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +20,20 @@ public class StudentsController(IMediator mediator) : BaseController
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         var result = await mediator.Send(new GetStudentProfileQuery(userId), cancellationToken);
+
+        if (!result.IsSuccess)
+            return HandleError(result);
+
+        return Ok(result.Data);
+    }
+
+    [Authorize(Roles = "Student")]
+    [HttpPut("profile")]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateStudentProfileRequest request, CancellationToken cancellationToken)
+    {
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var result = await mediator.Send(new UpdateStudentProfileCommand(userId, request), cancellationToken);
 
         if (!result.IsSuccess)
             return HandleError(result);

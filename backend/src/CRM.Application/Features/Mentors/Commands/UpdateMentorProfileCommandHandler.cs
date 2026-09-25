@@ -1,4 +1,5 @@
 using CRM.Application.Common.DTOs.Mentors.Response;
+using CRM.Application.Common.Validators;
 using CRM.Application.Common.Wrappers;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Domain.Enums;
@@ -22,6 +23,9 @@ public class UpdateMentorProfileCommandHandler(IUnitOfWork unitOfWork)
         mentor.Specialization = request.Specialization;
         mentor.Bio = request.Bio;
         mentor.ExperienceYears = request.ExperienceYears;
+        mentor.Phone = request.Phone;
+        mentor.LinkedInUrl = request.LinkedInUrl;
+        mentor.GithubUrl = request.GithubUrl;
 
         unitOfWork.Mentor.Update(mentor);
         await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -34,7 +38,11 @@ public class UpdateMentorProfileCommandHandler(IUnitOfWork unitOfWork)
             Email: mentor.User.Email,
             Specialization: mentor.Specialization,
             Bio: mentor.Bio,
-            ExperienceYears: mentor.ExperienceYears
+            ExperienceYears: mentor.ExperienceYears,
+            LinkedInUrl: mentor.LinkedInUrl,
+            GithubUrl: mentor.GithubUrl,
+            HireDate: mentor.HireDate,
+            IsActive: mentor.IsActive
         );
 
         return Result<MentorProfileResponse>.Ok(response);

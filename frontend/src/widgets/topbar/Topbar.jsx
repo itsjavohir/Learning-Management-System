@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useColorMode } from '../../shared/lib/useColorMode';
 import './Topbar.css';
 
@@ -101,13 +101,13 @@ function Topbar() {
                     <BellIcon />
                 </button>
 
-                <div className="topbar-user">
+                <Link to="/mentor-profile" className="topbar-user" aria-label="Open profile">
                     <span className="topbar-user-avatar">A</span>
                     <div className="topbar-user-info">
                         <span className="topbar-user-name">Admin</span>
                         <span className="topbar-user-role">Administrator</span>
                     </div>
-                </div>
+                </Link>
             </div>
         </header>
     );

@@ -44,53 +44,125 @@ function MentorProfilePage() {
         );
     }
 
+    const displayName = [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') || 'Admin';
+    const initials = displayName.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase() || 'A';
+
     return (
-        <div className="users-page">
-            <div className="users-header">
-                <h1>Mentor Profile</h1>
-            </div>
+        <div className="mentor-profile-page">
+            <div className="mentor-profile-cover" />
 
-            <div className="create-card mentor-profile-card">
-                <h3>
-                    {profile?.firstName} {profile?.lastName}
-                </h3>
-                <p className="mentor-profile-meta">
-                    {profile?.phoneNumber}
-                    {profile?.email ? ` · ${profile.email}` : ''}
-                </p>
+            <div className="mentor-profile-shell">
+                <div className="mentor-profile-header">
+                    <div className="mentor-profile-avatar-wrap">
+                        <div className="mentor-profile-avatar">{initials}</div>
+                    </div>
 
-                <form onSubmit={handleSubmit} className="create-form create-form--profile">
-                    {updateProfile.isError && (
-                        <div className="create-form-error">
-                            {updateProfile.error?.response?.data?.message || 'Error updating profile'}
+                    <div className="mentor-profile-summary">
+                        <div className="mentor-profile-topline">
+                            <div>
+                                <p className="mentor-profile-kicker">Mentor profile</p>
+                                <h1>{displayName}</h1>
+                            </div>
+                            <button type="button" className="mentor-profile-btn mentor-profile-btn--primary">
+                                Edit profile
+                            </button>
                         </div>
-                    )}
-                    {updateProfile.isSuccess && (
-                        <div className="create-form-success">Profile saved</div>
-                    )}
 
-                    <input
-                        placeholder="Specialization"
-                        value={form.specialization}
-                        onChange={(e) => setForm({ ...form, specialization: e.target.value })}
-                    />
-                    <input
-                        type="number"
-                        min="0"
-                        placeholder="Experience (years)"
-                        value={form.experienceYears}
-                        onChange={(e) => setForm({ ...form, experienceYears: e.target.value })}
-                    />
-                    <textarea
-                        placeholder="Bio"
-                        rows={4}
-                        value={form.bio}
-                        onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                    />
-                    <button type="submit" disabled={updateProfile.isPending}>
-                        {updateProfile.isPending ? 'Saving...' : 'Save profile'}
-                    </button>
-                </form>
+                        <p className="mentor-profile-handle">@{(profile?.email || 'admin').split('@')[0]}</p>
+                        <p className="mentor-profile-bio">
+                            {form.bio || 'Helping students grow with practical learning, structure, and real mentorship.'}
+                        </p>
+
+                        <div className="mentor-profile-stats">
+                            <div><strong>128</strong><span>Students</span></div>
+                            <div><strong>12</strong><span>Programs</span></div>
+                            <div><strong>7 yrs</strong><span>Experience</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mentor-profile-grid">
+                    <div className="mentor-profile-card mentor-profile-panel">
+                        <div className="mentor-profile-panel-header">
+                            <h3>About</h3>
+                            <span>Profile</span>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="mentor-profile-form">
+                            {updateProfile.isError && (
+                                <div className="create-form-error">
+                                    {updateProfile.error?.response?.data?.message || 'Error updating profile'}
+                                </div>
+                            )}
+                            {updateProfile.isSuccess && (
+                                <div className="create-form-success">Profile saved</div>
+                            )}
+
+                            <div className="mentor-profile-form-row">
+                                <label className="mentor-field">
+                                    <span>Specialization</span>
+                                    <input
+                                        placeholder="Specialization"
+                                        value={form.specialization}
+                                        onChange={(e) => setForm({ ...form, specialization: e.target.value })}
+                                    />
+                                </label>
+
+                                <label className="mentor-field">
+                                    <span>Experience</span>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        placeholder="Experience (years)"
+                                        value={form.experienceYears}
+                                        onChange={(e) => setForm({ ...form, experienceYears: e.target.value })}
+                                    />
+                                </label>
+                            </div>
+
+                            <label className="mentor-field mentor-field--full">
+                                <span>Bio</span>
+                                <textarea
+                                    placeholder="Bio"
+                                    rows={5}
+                                    value={form.bio}
+                                    onChange={(e) => setForm({ ...form, bio: e.target.value })}
+                                />
+                            </label>
+
+                            <div className="mentor-profile-actions">
+                                <button type="button" className="mentor-profile-btn mentor-profile-btn--secondary">
+                                    Share
+                                </button>
+                                <button type="submit" className="mentor-profile-btn mentor-profile-btn--primary" disabled={updateProfile.isPending}>
+                                    {updateProfile.isPending ? 'Saving...' : 'Save profile'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div className="mentor-profile-card mentor-profile-panel">
+                        <div className="mentor-profile-panel-header">
+                            <h3>Contact</h3>
+                            <span>Details</span>
+                        </div>
+
+                        <div className="mentor-profile-contact-list">
+                            <div className="mentor-contact-item">
+                                <span className="mentor-contact-label">Phone</span>
+                                <strong>{profile?.phoneNumber || '+998 90 000 00 00'}</strong>
+                            </div>
+                            <div className="mentor-contact-item">
+                                <span className="mentor-contact-label">Email</span>
+                                <strong>{profile?.email || 'admin@crm.local'}</strong>
+                            </div>
+                            <div className="mentor-contact-item">
+                                <span className="mentor-contact-label">Focus</span>
+                                <strong>{form.specialization || 'Product design'}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1,4 +1,5 @@
 using CRM.Application.Common.DTOs.Groups.Response;
+using CRM.Application.Common.Extensions;
 using CRM.Application.Common.Wrappers;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Domain.Enums;
@@ -20,7 +21,7 @@ public class UpdateGroupCommandHandler(IUnitOfWork unitOfWork)
         }
 
         group.Name = request.Name;
-        group.StartDate = request.StartDate;
+        group.StartDate = request.StartDate.ToUtc();
         group.MaxStudents = request.MaxStudents;
 
         unitOfWork.Group.Update(group);

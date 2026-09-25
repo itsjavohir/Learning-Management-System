@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CRM.Infrastructure\CRM.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

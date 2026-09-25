@@ -8,17 +8,17 @@ function Snow() {
     return (
         <div className="season-decoration">
             {particles.map((_, i) => {
-                const size = 3 + Math.random() * 4;
+                const size = 3 + (i % 4);
                 return (
                     <span
                         key={i}
                         className="snow-particle"
                         style={{
-                            left: `${Math.random() * 100}%`,
+                            left: `${(i * 37) % 100}%`,
                             width: size,
                             height: size,
-                            animationDuration: `${7 + Math.random() * 8}s`,
-                            animationDelay: `${Math.random() * 8}s`,
+                            animationDuration: `${7 + (i % 8)}s`,
+                            animationDelay: `${i % 8}s`,
                         }}
                     />
                 );

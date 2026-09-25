@@ -15,7 +15,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options ) : DbContext (
     public DbSet<GroupStudent> GroupStudents { get; set; }
     public DbSet<Profile> Profiles => Set<Profile>();
     public DbSet<Lesson> Lessons => Set<Lesson>();
+    public DbSet<Attendance> Attendances => Set<Attendance>();
     public DbSet<ThemeSettings> ThemeSettings {get;set;}
+    public DbSet<SeasonOverride> SeasonOverrides => Set<SeasonOverride>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

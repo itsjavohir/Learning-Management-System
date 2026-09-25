@@ -1,29 +1,28 @@
 import { lazy, Suspense } from 'react';
 import { useThemeStore } from '../../../entities/theme/model/themeStore';
-import { seasonThemeMap } from '../../../entities/theme/model/seasonThemeMap';
 
 // Each effect is its own chunk — only the one matching the current
 // season is ever downloaded.
 const EFFECT_COMPONENTS = {
     snow: lazy(() => import('./Snow')),
+    snowman: lazy(() => import('./effects/Snowman')),
+    'christmas-lights': lazy(() => import('./effects/ChristmasLights')),
     blossom: lazy(() => import('./Blossom')),
     sun: lazy(() => import('./Sun')),
     leaves: lazy(() => import('./Leaves')),
 };
 
 function SeasonDecoration() {
-    const season = useThemeStore((state) => state.season);
+    const effects = useThemeStore((state) => state.effects);
 
-    if (!season) return null;
-
-    const effect = seasonThemeMap[season]?.effect;
-    const EffectComponent = EFFECT_COMPONENTS[effect];
-
-    if (!EffectComponent) return null;
+    if (!effects.length) return null;
 
     return (
         <Suspense fallback={null}>
-            <EffectComponent />
+            {effects.map((effect) => {
+                const EffectComponent = EFFECT_COMPONENTS[effect];
+                return EffectComponent ? <EffectComponent key={effect} /> : null;
+            })}
         </Suspense>
     );
 }

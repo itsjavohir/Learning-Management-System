@@ -1,4 +1,5 @@
 using CRM.Application.Common.DTOs.Groups.Response;
+using CRM.Application.Common.Extensions;
 using CRM.Application.Common.Wrappers;
 using CRM.Application.Interfaces.Repositories;
 using CRM.Domain.Entities;
@@ -42,7 +43,7 @@ public class CreateGroupCommandHandler(IUnitOfWork unitOfWork)
             CourseId = request.CourseId,
             MentorId = mentor.Id,
 
-            StartDate = request.StartDate,
+            StartDate = request.StartDate.ToUtc(),
             MaxStudents = request.MaxStudents
         };
 
